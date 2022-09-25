@@ -1,0 +1,121 @@
+\chapter{Relevant Models and Sources}
+
+"The performance of the star tracker depends on the sensitivity to starlight, FOV, the accuracy of the star centroiding, the star detection threshold, the number of stars in the FOV, the internal star catalog, and the calibration" (Carl Christian Liebe)\cite{accuracy_performance_of_star_trackers}
+
+\textbf{Accuracy performance of star trackers - a tutorial}\cite{accuracy_performance_of_star_trackers}
+\begin{enumerate}
+    \item Limit of Pixel Accuracy w/o intentional defocusing
+    \[ \int_{-0.5}^{0.5}\int_{-0.5}^{0.5} \sqrt{x^2 + y^2} \,dx\,dy  = 0.38\]
+
+    \item Radiation from a black body at a given wavelength and temperature (on Lens)
+    \[ I(\lambda,T) = \frac{2*\pi*h*c^2}{\lambda^5*(e^\frac{h*c}{\lambda*k_B*T}-1)} \]
+    where
+    \[ h = 6.626*10^-34 J*s; c = 2.997*10^8 m/s; k_B = 1.38 * 10^{-23} J/K; [\lambda] = m; [T] = K\]
+
+    \item Photon Energy
+    \[ E = \frac{hc}{\lambda} \]
+    where
+    \[ [\lambda] = m; h = 6.626*10^{-34} J*s; c = 2.997*10^8 m/s \]
+
+    \item photoelectrons per exposure
+    \[ 19100\frac{photoelectrons}{s*mm^2} * \frac{1}{2.5^{M_V-0}} * t\frac{sec}{exposure} * \pi * A \]
+    where
+    \[ M_V \equiv Apparent\:Magnitude; [t] \equiv exposure\:time; A \equiv Aperture\:Area \]
+
+    \item Typical noise floor size 
+    \[ NF = AvgBrightness + 5*\sigma_{brightness} \]
+
+    \item Detection Limit
+    \[ A_{pixel} + 5*\sigma_{pixel} * \frac{1}{\int_{0}^{1}\int_{0}^{1} \frac{1}{2*\pi*\sigma_{PSF}}e^{\frac{-x^2+y^2}{2*\sigma_{PSF}}} \,dx\,dy} \]
+    where
+    $A_{pixel}\equiv mean\:value\:of\:pixels; \sigma_{pixel} \equiv standard\:deviation\:of\:pixel\:values; \sigma_{PSF} \equiv Point\:Spread\:Function\:assuming\:Gaussian$
+
+    \item Fraction of Sky covered by FOV
+    \[ \frac{1-cos(\frac{A}{2})}{2} \]
+    where
+    \[ [A] = deg \]
+
+    \item Number of stars brighter than a given magnitude, \emph{M}; experimentally consistent
+    \[ N = 6.57 * e^{1.08*M} \]
+
+    \item Average number of stars in the FOV
+    \[ N_{FOV} = 6.57 * e^{1.08*M} * \frac{1-cos(\frac{A}{2})}{2} \]
+
+    \item Pinhole Model to Reference Frame Transformation
+    \[ \begin{bmatrix}
+        i \\
+        j \\
+        k \\
+    \end{bmatrix} = \begin{bmatrix}
+        cos(atan2(x - x_0, y - y_0)) * cos(\frac{\pi}{2} - atan(\sqrt{(\frac{x - x_0}{F})^2 + (\frac{y - y_0}{F})^2})) \\
+        sin(atan2(x - x_0, y - y_0)) * cos(\frac{\pi}{2} - atan(\sqrt{(\frac{x - x_0}{F})^2 + (\frac{y - y_0}{F})^2})) \\
+        sin(\frac{\pi}{2} - atan(\sqrt{(\frac{x - x_0}{F})^2 + (\frac{y - y_0}{F})^2}))
+    \end{bmatrix} \]
+    where
+    $x,y \equiv focal plane\:coordinate; x_0, y_0 \equiv intersection\:of\:boresight\:and\:focal\:plane; F \equiv Focal\:Length$
+
+    \item Typical Form of Star Tracker Accuracy
+    \[ CrossBoresight_{RMS} = \sqrt{\frac{\sum_{i=1}^{N} x_{i}^2}{N}} \]
+
+    \item Estimated Noise Exclusion Angle in Cross-Boresight Axis
+    \[ E_{cross-boresight} = \frac{A*E_{centroid}}{N_{pixel}*\sqrt{N_{star}}} \]
+    $where A == FOV, E_{Centroid} == average centroid accuracy [0.01 - 0.5], N_{Pixels} == number of pixels across plane; N_{Stars} == number of detected stars in image$
+
+    \item Average distance from a star to the center of the focal plane 
+    \[ \int_{-N/2}^{N/2}\int_{-N/2}^{N/2} \sqrt{x^2 + y^2} \,dx\,dy = 0.3825N \]
+
+    \item Estimated Roll Accuracy
+    \[ E_{roll} = atan(\frac{E_{centroid}}{0.3825*N_{pixel}}) * \frac{1}{\sqrt{N_{stars}}} \]
+
+\end{enumerate}
+
+KEY CONCEPTS:
+\begin{itemize}
+    \item 2 Types of Error: Line of Sight Uncertainty and Relative Error
+    \begin{itemize}
+        \item Line of Sight Uncertainty
+        \begin{itemize}
+            \item Can't be calibrated out
+            \item Includes errors i.e., thermal expansion, launch effects, etc.
+        \end{itemize}
+    \end{itemize}
+    \begin{itemize}
+        \item Relative Error
+        \begin{itemize}
+            \item Ability to measure angles and characteristics between stars 
+            \item Contains 4 categories: Calibration, S-Curve, NEA, Algorithmic
+        \end{itemize}
+    \end{itemize}
+    \begin{itemize}
+        \item Calibration Error
+        \begin{itemize}
+            \item errors in calibration
+            \item i.e, inaccurate focal length, intersection between boresight and focal plane, hardware flaws
+            \item optical distortion, chroma/astigmatism
+        \end{itemize}
+    \end{itemize}
+    \begin{itemize}
+        \item S-Curve Error
+        \begin{itemize}
+            \item pixel periodic errors
+            \item centroiding errors, homogeneity of pixel response, noise, dark current, PSF, brightness, etc.
+            \item Radiation has an effect on focal sensor; errors tend to get worse as sensitivity and dark-current gets more non-uniform
+            \item Can be calibrated by looking at a grid of evenly spaced pixels; transformation can be applied to correct errors; called an S-Curve Correction
+        \end{itemize} 
+    \end{itemize}
+    \begin{itemize}
+        \item NEA Error 
+        \begin{itemize}
+            \item Ability to get same attitude given same input
+            \item Exclusively reflects hardware
+            \item Photon noise, dark-current noise, read/amplifier noise, A/D resolution; can be estimated
+            \item Typical Roll Accuracy is 6-16x less accurate than cross-boresight accuracy
+        \end{itemize}
+    \end{itemize}
+    \begin{itemize}
+        \item Algorithmic Error
+        \begin{itemize}
+            \item Errors in algorithm i.e.,False stars, star catalog inaccuracies
+        \end{itemize} 
+    \end{itemize}
+\end{itemize}
