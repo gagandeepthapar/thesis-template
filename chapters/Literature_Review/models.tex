@@ -1,23 +1,119 @@
-\chapter{Relevant Models and Sources}
-\section{Models}
-List of models group by error source 
+\chapter{Error Sources}
 
-\subsection{CCD Noise}
+List of models grouped by error source 
+
+\section{CCD Noise}
+\subsection{Key Concepts}
+\begin{itemize}
+    \item high resolution, high quantum efficiency (QE), wide spectral response, low noise, linearity, geometric fidelity, fast response, small size, low power consumption, durability \cite{radiometric_ccd_camera_calibration}
+    \item discrete "buckets" where photons are trapped/measured (called photoelectrons)
+    \item Uniformly illuminating a focal plane will lead to non-uniformity in collected charge - called the fixed pattern noise
+    \item Normally collection site values are independent of each other; in reality a surplus of charge can "spill over" adjacent buckets and creates codependence; this is called blooming
+    \item Thermal energy creates free electrons that can be stored in buckets and become indistinguishable from real photoelectrons; called \textbf{Dark Current}; Dark Current $\propto T$, Integration Time
+    \item Shot noise is a result of quantum nature of light and characterizes uncertainty in the number of electrons stored in a bucket
+    \item Amplifier noise dominates shot noise at low signal levels; determines real noise floor signal; high-frequency noise is filtered out via Low-Pass Filter
+    \item Spatial variation in illumination and reflectance leads to spatial variance in the collected charge across the focal plane
+    \begin{itemize}
+        \item Number of electrons follows a Poisson's Ratio such that variance equals its mean
+    \end{itemize}
+\end{itemize}
+\subsection{Models}
 \begin{enumerate}
-
     \item Typical noise floor size\cite{accuracy_performance_of_star_trackers} 
     \[ NF = \bar{B} + 5*\sigma_{B} \]
     where $\bar{B} \equiv$ the average brightness value and $\sigma_{B} \equiv$ the standard deviation in brightness
 
+    \item Ideal number of electrons collected in a collection site (bucket)\cite{radiometric_ccd_camera_calibration}
+    \[ I = T\int_{\lambda}\int_{y}\int_{x} B(x,y,\lambda)S_{r}(x,y)q(\lambda) \,dx \,dy \,d\lambda \]
+    where \\
+    \begin{center}
+        $ T \equiv$ integration time [sec]\\
+        $(x,y) \equiv$ continuous coordinates on the focal plane\\
+        $B(x,y,\lambda) \equiv$ incident spectral irradiance [W/unit area]\\
+        $q(\lambda) \equiv$ ratio of electrons collected per incident light energy as a function of wavelength [electrons/Joule]\\
+        $S_{r} \equiv$ spatial response of the collection site  
+    \end{center}
+
+    \item Model of electrons collected by site\cite{radiometric_ccd_camera_calibration}
+    \[ N = KI \]
+    where $K \equiv$ a constant associated with a collection site that accounts for product of $q(\lambda)$ and $S_{r}(x,y)$ and $\bar{K} = 1$ and variance of $\sigma^{2}_{K}$
+
+    \item Number of electrons integrated at a collection site\cite{radiometric_ccd_camera_calibration} 
+    \[ N = KI + N_{DC} + N_{S} \]
+    where $N_{DC} \equiv$ electrons from Dark Current, $N_{S} \equiv$ zero mean Poisson shot noise with variance a function of $KI$ and $N_{DC}$
+    
+    \item Magnitude of Video Signal, $V$\cite{radiometric_ccd_camera_calibration}
+    \[ V = (KI + N_{DC} + N_{S} + N_{R})A \]
+    where $\bar{N_{R}} = 0$ and $N_{R} \equiv$ amplifier read noise, $A \equiv$ combined gain of output amplifier and camera circuitry 
+
+    \item Quantization of Video Signal\cite{radiometric_ccd_camera_calibration} 
+    \[ D = (KI + N_{DC} + N_{S} + N_{R})A + N_{Q} \]
+    where $\bar{N_{Q}}=0$ and $N_{Q} \equiv$ random variable independent of $V$ and has a uniform probability over range $[-\frac{1}{2}a, \frac{1}{2}q]$ with variance $\frac{q^2}{12}$ where $q$ is a quantization step such that 
+    \[ (n - \frac{1}{2})q < V \le (n + \frac{1}{2})q) \] 
+    where $n$ is an integer satisfying $0 \le n \le 2^b - 1$ where $b$ is the number of bits to represent $D$
+
+    \item Spatially varying spectral reflectance, $R$
+    \[ R(x,y,\lambda) = \bar{R}(\lambda) + r(x,y,\lambda) \]
+    where\\
+    \begin{center}
+        $(x,y,z)$ is a coordinate system where $z$ is the boresight axis and $x,y$ span the focal/sensor plane\\
+        $\bar{R}(\lambda)$ is the mean reflectance \\
+        $r(x,y,\lambda)$ represents random spatial variance of reflectance 
+    \end{center}
+    thus
+    \[ E[R(x,y,\lambda)] = \bar{R}(\lambda) \quad \lambda \in [\lambda_{1}, \lambda_{2}] \]
+    and
+    \[ E[r(x,y,\lambda)] = 0 \quad \lambda \in [\lambda_{1}, \lambda_{2}] \]
+    where $[\lambda_{1}, \lambda_{2}]$ is the range over which $q(\lambda)$ is nonzero\\
+    and $E$ is the expected value operator over $(x,y)$
+
+    \item Spectral irradiance \cite{radiometric_ccd_camera_calibration}
+    \[ L(x,y,\lambda) = \bar{L}(\lambda) + l(x,y,\lambda) \]
+    where
+    \[ E[L(x,y,\lambda)] = \bar{L}(\lambda) \quad \lambda \in [\lambda_{1}, \lambda_{2}] \]
+    and
+    \[ E[l(x,y,\lambda)] = 0 \quad \lambda \in [\lambda_{1}, \lambda_{2}] \]
+
+    \item (Many additional derivations to transform this in terms of camera pixels; too specific to include here) \dots
+    \item Generalizing (6) to the camera model
+    \[ D(a,b) = (K(a,b)I(a,b) + N_{DC}(a,b) + N_{S}(a,b) + N_{R}(a,b))A + N_{Q}(a,b) \]
+
+    \item Expected Value of $D(a,b)$
+    \[ D(a,b) = \mu(a,b) + N(a,b) \]
+    where
+    \[ \mu(a,b) = K(a,b)I(a,b)A + E_{DC}(a,b)A \]
+    where $E_{DC}$ is the expected value of $N_{DC}(a,b)$ and $\bar{N}_{AB} = 0$ and 
+    \[ N(a,b) = N_{I}(a,b) + N_{C}(a,b) \]
+    
+    \item Variance of $N_{I}(a,b)$
+    \[ \sigma_{I}^2(a,b) = A^2(K(a,b)I(a,b) + E_{DC}(a,b)) \]
+
+    \item Variance of $N_{C}(a,b)$
+    \[ \sigma_{C}^2 = A^2\sigma_{R}^2 + \frac{q^2}{12} \]
 
 \end{enumerate}
 
-\subsection{Thermal Distortion}
+\section{Thermal Distortion}
+\subsection{Models}
 \begin{enumerate}
-    \item 
+    \item Refractive Index of Air at a given temperature \cite{thermal_effects_in_optical_systems}
+    \[ n_{T} - 1 = (n_{15}-1)(\frac{1.0549}{1 + 0.00366T}) \]
+    where $n_T$ is the refractive index at Temperature, $T$ given in celsius and $n_{15}$ is the refractive index of air at 15C
+
+    \item $n_{15}$ as a function of wavelength, $\lambda$ \cite{thermal_effects_in_optical_systems}
+    \[ (n_{15} - 1) * 10^8 = 8342.1 + \frac{2406030}{130-\nu^2} + \frac{15996}{38.9-\nu^2}\]
+    where $\nu = \frac{1}{\lambda}$ and [$\lambda$] $\equiv$ microns
+
+    \item Relation between absolute and relative refractive indices \cite{thermal_effects_in_optical_systems}
+    \[ n_{abs} = n_{rel}n_{air} \]
+
+    \item Relation between thermal expansion and focal Length \cite{thermal_effects_in_optical_systems}
+    \[ x_f = \frac{1}{f}\frac{df}{dt} = x_g - \frac{1}{n - n_{air}} (\frac{dn}{dt}-n\frac{dn_{air}}{dt}) \]
+
 \end{enumerate}
 
-\subsection{Radiation}
+\section{Radiation}
+\subsection{Models}
 \begin{enumerate}
     \item Radiation from a black body at a given wavelength and temperature (on lens)\cite{accuracy_performance_of_star_trackers}
     \[ I(\lambda,T) = \frac{2*\pi*h*c^2}{\lambda^5*(e^{(h*c)/(\lambda*k_B*T)}-1)} \]
@@ -33,7 +129,8 @@ List of models group by error source
 
 \end{enumerate}
 
-\subsection{Hardware}
+\section{Hardware}
+\subsection{Models}
 \begin{enumerate}
     \item Limit of Pixel Accuracy w/o intentional defocusing\cite{accuracy_performance_of_star_trackers}
     \[ \int_{-0.5}^{0.5}\int_{-0.5}^{0.5} \sqrt{x^2 + y^2} \,dx\,dy  = 0.38\]
@@ -52,55 +149,8 @@ List of models group by error source
 
 \end{enumerate}
 
-\subsection{Misc}
-\begin{enumerate}
-    \item Right Ascension ($\alpha$) and Declination ($\delta$) to Direction Vector \cite{optical_system_error_analysis_and_calibration}
-    \[ \overrightarrow{v} = \begin{bmatrix}
-        cos\alpha*cos\delta \\
-        sin\alpha*cos\delta \\
-        sin\delta
-    \end{bmatrix} \] 
-
-    \item Position vector of star on focal plane from optical Lens \cite{optical_system_error_analysis_and_calibration}
-    \[ w_i = \frac{1}{\sqrt{(x_i - x_0)^2 + (y_i - y_0)^2 + f^2}} * \begin{bmatrix}
-        -(x_i - x_0)\\
-        -(y_i - y_0) \\
-        f
-    \end{bmatrix} \]
-    where $f \equiv$ the focal length of the camera and $(x_0, y_0)$ is where the boresight meets the focal plane and $(x_i, y_i)$ is the center pixel of the star on the focal plane
-
-    \item Fraction of Sky covered by FOV\cite{accuracy_performance_of_star_trackers}
-    \[ \frac{1-cos(\frac{A}{2})}{2} \]
-    where $[A] \equiv$ deg   
-
-    \item Number of stars brighter than a given magnitude, \emph{M}; experimentally consistent\cite{accuracy_performance_of_star_trackers}
-    \[ N = 6.57 * e^{1.08*M} \]
-
-    \item Average number of stars in the FOV\cite{accuracy_performance_of_star_trackers}
-    \[ N_{FOV} = 6.57 * e^{1.08*M} * \frac{1-cos(\frac{A}{2})}{2} \]
-
-    \item Pinhole Model to Reference Frame Transformation\cite{accuracy_performance_of_star_trackers}
-    \[ \begin{bmatrix}
-        i \\
-        j \\
-        k \\
-    \end{bmatrix} = \begin{bmatrix}
-        cos(atan2(x - x_0, y - y_0)) * cos(\frac{\pi}{2} - atan(\sqrt{(\frac{x - x_0}{F})^2 + (\frac{y - y_0}{F})^2})) \\
-        sin(atan2(x - x_0, y - y_0)) * cos(\frac{\pi}{2} - atan(\sqrt{(\frac{x - x_0}{F})^2 + (\frac{y - y_0}{F})^2})) \\
-        sin(\frac{\pi}{2} - atan(\sqrt{(\frac{x - x_0}{F})^2 + (\frac{y - y_0}{F})^2}))
-    \end{bmatrix} \]
-    where $x,y \equiv$ focal plane coordinate; $(x_0, y_0) \equiv$ intersection of boresight and focal plane; $F \equiv$ Focal Length
-
-    \item Typical Form of Star Tracker Accuracy\cite{accuracy_performance_of_star_trackers}
-    \[ CrossBoresight_{RMS} = \sqrt{\frac{\sum_{i=1}^{N} x_{i}^2}{N}} \]
-
-    \item Average distance from a star to the center of the focal plane\cite{accuracy_performance_of_star_trackers} 
-    \[ \int_{-N/2}^{N/2}\int_{-N/2}^{N/2} \sqrt{x^2 + y^2} \,dx\,dy = 0.3825N \]
-
-\end{enumerate}
-
-\section{KEY CONCEPTS}
-
+\section{Misc}
+\subsection{Key Concepts}
 "The performance of the star tracker depends on the sensitivity to starlight, FOV, the accuracy of the star centroiding, the star detection threshold, the number of stars in the FOV, the internal star catalog, and the calibration" (Carl Christian Liebe)\cite{accuracy_performance_of_star_trackers} \\
 
 "Factors such as misalignment, aberration, instrument aging, and temperature effects could cause a departure of the star trackers from the ideal pinhole image model"\cite{optical_system_error_analysis_and_calibration}\\
@@ -163,3 +213,49 @@ List of models group by error source
     \end{itemize}
     \item Subpixel processing is used for star extraction off the focal plane
 \end{itemize}
+\subsection{Models}
+\begin{enumerate}
+    \item Right Ascension ($\alpha$) and Declination ($\delta$) to Direction Vector \cite{optical_system_error_analysis_and_calibration}
+    \[ \overrightarrow{v} = \begin{bmatrix}
+        cos\alpha*cos\delta \\
+        sin\alpha*cos\delta \\
+        sin\delta
+    \end{bmatrix} \] 
+
+    \item Position vector of star on focal plane from optical Lens \cite{optical_system_error_analysis_and_calibration}
+    \[ w_i = \frac{1}{\sqrt{(x_i - x_0)^2 + (y_i - y_0)^2 + f^2}} * \begin{bmatrix}
+        -(x_i - x_0)\\
+        -(y_i - y_0) \\
+        f
+    \end{bmatrix} \]
+    where $f \equiv$ the focal length of the camera and $(x_0, y_0)$ is where the boresight meets the focal plane and $(x_i, y_i)$ is the center pixel of the star on the focal plane
+
+    \item Fraction of Sky covered by FOV\cite{accuracy_performance_of_star_trackers}
+    \[ \frac{1-cos(\frac{A}{2})}{2} \]
+    where $[A] \equiv$ deg   
+
+    \item Number of stars brighter than a given magnitude, \emph{M}; experimentally consistent\cite{accuracy_performance_of_star_trackers}
+    \[ N = 6.57 * e^{1.08*M} \]
+
+    \item Average number of stars in the FOV\cite{accuracy_performance_of_star_trackers}
+    \[ N_{FOV} = 6.57 * e^{1.08*M} * \frac{1-cos(\frac{A}{2})}{2} \]
+
+    \item Pinhole Model to Reference Frame Transformation\cite{accuracy_performance_of_star_trackers}
+    \[ \begin{bmatrix}
+        i \\
+        j \\
+        k \\
+    \end{bmatrix} = \begin{bmatrix}
+        cos(atan2(x - x_0, y - y_0)) * cos(\frac{\pi}{2} - atan(\sqrt{(\frac{x - x_0}{F})^2 + (\frac{y - y_0}{F})^2})) \\
+        sin(atan2(x - x_0, y - y_0)) * cos(\frac{\pi}{2} - atan(\sqrt{(\frac{x - x_0}{F})^2 + (\frac{y - y_0}{F})^2})) \\
+        sin(\frac{\pi}{2} - atan(\sqrt{(\frac{x - x_0}{F})^2 + (\frac{y - y_0}{F})^2}))
+    \end{bmatrix} \]
+    where $x,y \equiv$ focal plane coordinate; $(x_0, y_0) \equiv$ intersection of boresight and focal plane; $F \equiv$ Focal Length
+
+    \item Typical Form of Star Tracker Accuracy\cite{accuracy_performance_of_star_trackers}
+    \[ CrossBoresight_{RMS} = \sqrt{\frac{\sum_{i=1}^{N} x_{i}^2}{N}} \]
+
+    \item Average distance from a star to the center of the focal plane\cite{accuracy_performance_of_star_trackers} 
+    \[ \int_{-N/2}^{N/2}\int_{-N/2}^{N/2} \sqrt{x^2 + y^2} \,dx\,dy = 0.3825N \]
+
+\end{enumerate}
