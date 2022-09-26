@@ -1,47 +1,85 @@
 \chapter{Relevant Models and Sources}
+\section{Models}
+List of models group by error source 
 
-"The performance of the star tracker depends on the sensitivity to starlight, FOV, the accuracy of the star centroiding, the star detection threshold, the number of stars in the FOV, the internal star catalog, and the calibration" (Carl Christian Liebe)\cite{accuracy_performance_of_star_trackers}
-
-\textbf{Accuracy performance of star trackers - a tutorial}\cite{accuracy_performance_of_star_trackers}
+\subsection{CCD Noise}
 \begin{enumerate}
-    \item Limit of Pixel Accuracy w/o intentional defocusing
-    \[ \int_{-0.5}^{0.5}\int_{-0.5}^{0.5} \sqrt{x^2 + y^2} \,dx\,dy  = 0.38\]
 
-    \item Radiation from a black body at a given wavelength and temperature (on Lens)
-    \[ I(\lambda,T) = \frac{2*\pi*h*c^2}{\lambda^5*(e^\frac{h*c}{\lambda*k_B*T}-1)} \]
-    where
-    \[ h = 6.626*10^-34 J*s; c = 2.997*10^8 m/s; k_B = 1.38 * 10^{-23} J/K; [\lambda] = m; [T] = K\]
+    \item Typical noise floor size\cite{accuracy_performance_of_star_trackers} 
+    \[ NF = \bar{B} + 5*\sigma_{B} \]
+    where $\bar{B} \equiv$ the average brightness value and $\sigma_{B} \equiv$ the standard deviation in brightness
 
-    \item Photon Energy
+
+\end{enumerate}
+
+\subsection{Thermal Distortion}
+\begin{enumerate}
+    \item 
+\end{enumerate}
+
+\subsection{Radiation}
+\begin{enumerate}
+    \item Radiation from a black body at a given wavelength and temperature (on lens)\cite{accuracy_performance_of_star_trackers}
+    \[ I(\lambda,T) = \frac{2*\pi*h*c^2}{\lambda^5*(e^{(h*c)/(\lambda*k_B*T)}-1)} \]
+    where $h = 6.626*10^-34 J*s$; $c = 2.997*10^8 m/s$; $k_B = 1.38 * 10^{-23} J/K$; $[\lambda] = m; [T] = K$
+
+    \item Photon Energy \cite{accuracy_performance_of_star_trackers}
     \[ E = \frac{hc}{\lambda} \]
-    where
-    \[ [\lambda] = m; h = 6.626*10^{-34} J*s; c = 2.997*10^8 m/s \]
+    where $[\lambda] = m$; $h = 6.626*10^{-34} J*s$; $c = 2.997*10^8 m/s$
 
-    \item photoelectrons per exposure
+    \item Photoelectrons per exposure \cite{accuracy_performance_of_star_trackers}
     \[ 19100\frac{photoelectrons}{s*mm^2} * \frac{1}{2.5^{M_V-0}} * t\frac{sec}{exposure} * \pi * A \]
-    where
-    \[ M_V \equiv Apparent\:Magnitude; [t] \equiv exposure\:time; A \equiv Aperture\:Area \]
+    where $M_V \equiv$ Apparent Magnitude; $t \equiv$ exposure time $[sec]$; $A \equiv$ Aperture Area $[m^{2}]$
 
-    \item Typical noise floor size 
-    \[ NF = AvgBrightness + 5*\sigma_{brightness} \]
+\end{enumerate}
 
-    \item Detection Limit
+\subsection{Hardware}
+\begin{enumerate}
+    \item Limit of Pixel Accuracy w/o intentional defocusing\cite{accuracy_performance_of_star_trackers}
+    \[ \int_{-0.5}^{0.5}\int_{-0.5}^{0.5} \sqrt{x^2 + y^2} \,dx\,dy  = 0.38\]
+    where $(x,y)$ is the number of pixels in the $x$ and $y$ direction respectively on the focal plane
+
+    \item Detection Limit\cite{accuracy_performance_of_star_trackers}
     \[ A_{pixel} + 5*\sigma_{pixel} * \frac{1}{\int_{0}^{1}\int_{0}^{1} \frac{1}{2*\pi*\sigma_{PSF}}e^{\frac{-x^2+y^2}{2*\sigma_{PSF}}} \,dx\,dy} \]
-    where
-    $A_{pixel}\equiv mean\:value\:of\:pixels; \sigma_{pixel} \equiv standard\:deviation\:of\:pixel\:values; \sigma_{PSF} \equiv Point\:Spread\:Function\:assuming\:Gaussian$
+    where $A_{pixel}\equiv$ mean value of pixels; $\sigma_{pixel} \equiv$ standard deviation of pixel values; $\sigma_{PSF} \equiv$ Point Spread Function (assumed Gaussian)
 
-    \item Fraction of Sky covered by FOV
+    \item Estimated Noise Exclusion Angle in Cross-Boresight Axis
+    \[ E_{cross-boresight} = \frac{A*E_{centroid}}{N_{pixel}*\sqrt{N_{star}}} \]
+    where $A \equiv$ FOV, $E_{Centroid} \equiv$ average centroid accuracy [0.01 - 0.5], $N_{Pixels} \equiv$ number of pixels across plane; $N_{Stars} \equiv$ number of detected stars in image
+
+    \item Estimated Roll Accuracy
+    \[ E_{roll} = atan(\frac{E_{centroid}}{0.3825*N_{pixel}}) * \frac{1}{\sqrt{N_{stars}}} \]
+
+\end{enumerate}
+
+\subsection{Misc}
+\begin{enumerate}
+    \item Right Ascension ($\alpha$) and Declination ($\delta$) to Direction Vector \cite{optical_system_error_analysis_and_calibration}
+    \[ \overrightarrow{v} = \begin{bmatrix}
+        cos\alpha*cos\delta \\
+        sin\alpha*cos\delta \\
+        sin\delta
+    \end{bmatrix} \] 
+
+    \item Position vector of star on focal plane from optical Lens \cite{optical_system_error_analysis_and_calibration}
+    \[ w_i = \frac{1}{\sqrt{(x_i - x_0)^2 + (y_i - y_0)^2 + f^2}} * \begin{bmatrix}
+        -(x_i - x_0)\\
+        -(y_i - y_0) \\
+        f
+    \end{bmatrix} \]
+    where $f \equiv$ the focal length of the camera and $(x_0, y_0)$ is where the boresight meets the focal plane and $(x_i, y_i)$ is the center pixel of the star on the focal plane
+
+    \item Fraction of Sky covered by FOV\cite{accuracy_performance_of_star_trackers}
     \[ \frac{1-cos(\frac{A}{2})}{2} \]
-    where
-    \[ [A] = deg \]
+    where $[A] \equiv$ deg   
 
-    \item Number of stars brighter than a given magnitude, \emph{M}; experimentally consistent
+    \item Number of stars brighter than a given magnitude, \emph{M}; experimentally consistent\cite{accuracy_performance_of_star_trackers}
     \[ N = 6.57 * e^{1.08*M} \]
 
-    \item Average number of stars in the FOV
+    \item Average number of stars in the FOV\cite{accuracy_performance_of_star_trackers}
     \[ N_{FOV} = 6.57 * e^{1.08*M} * \frac{1-cos(\frac{A}{2})}{2} \]
 
-    \item Pinhole Model to Reference Frame Transformation
+    \item Pinhole Model to Reference Frame Transformation\cite{accuracy_performance_of_star_trackers}
     \[ \begin{bmatrix}
         i \\
         j \\
@@ -51,25 +89,23 @@
         sin(atan2(x - x_0, y - y_0)) * cos(\frac{\pi}{2} - atan(\sqrt{(\frac{x - x_0}{F})^2 + (\frac{y - y_0}{F})^2})) \\
         sin(\frac{\pi}{2} - atan(\sqrt{(\frac{x - x_0}{F})^2 + (\frac{y - y_0}{F})^2}))
     \end{bmatrix} \]
-    where
-    $x,y \equiv focal plane\:coordinate; x_0, y_0 \equiv intersection\:of\:boresight\:and\:focal\:plane; F \equiv Focal\:Length$
+    where $x,y \equiv$ focal plane coordinate; $(x_0, y_0) \equiv$ intersection of boresight and focal plane; $F \equiv$ Focal Length
 
-    \item Typical Form of Star Tracker Accuracy
+    \item Typical Form of Star Tracker Accuracy\cite{accuracy_performance_of_star_trackers}
     \[ CrossBoresight_{RMS} = \sqrt{\frac{\sum_{i=1}^{N} x_{i}^2}{N}} \]
 
-    \item Estimated Noise Exclusion Angle in Cross-Boresight Axis
-    \[ E_{cross-boresight} = \frac{A*E_{centroid}}{N_{pixel}*\sqrt{N_{star}}} \]
-    $where A == FOV, E_{Centroid} == average centroid accuracy [0.01 - 0.5], N_{Pixels} == number of pixels across plane; N_{Stars} == number of detected stars in image$
-
-    \item Average distance from a star to the center of the focal plane 
+    \item Average distance from a star to the center of the focal plane\cite{accuracy_performance_of_star_trackers} 
     \[ \int_{-N/2}^{N/2}\int_{-N/2}^{N/2} \sqrt{x^2 + y^2} \,dx\,dy = 0.3825N \]
-
-    \item Estimated Roll Accuracy
-    \[ E_{roll} = atan(\frac{E_{centroid}}{0.3825*N_{pixel}}) * \frac{1}{\sqrt{N_{stars}}} \]
 
 \end{enumerate}
 
-KEY CONCEPTS:
+\section{KEY CONCEPTS}
+
+"The performance of the star tracker depends on the sensitivity to starlight, FOV, the accuracy of the star centroiding, the star detection threshold, the number of stars in the FOV, the internal star catalog, and the calibration" (Carl Christian Liebe)\cite{accuracy_performance_of_star_trackers} \\
+
+"Factors such as misalignment, aberration, instrument aging, and temperature effects could cause a departure of the star trackers from the ideal pinhole image model"\cite{optical_system_error_analysis_and_calibration}\\
+"...the factors that directly affect the results... include extraction error of star point position, principal point error, error of focal length, direction vectors of the navigation stars, and attitude solution algorithm error" \cite{optical_system_error_analysis_and_calibration} \\
+
 \begin{itemize}
     \item 2 Types of Error: Line of Sight Uncertainty and Relative Error
     \begin{itemize}
@@ -116,6 +152,14 @@ KEY CONCEPTS:
         \item Algorithmic Error
         \begin{itemize}
             \item Errors in algorithm i.e.,False stars, star catalog inaccuracies
-        \end{itemize} 
+        \end{itemize}
     \end{itemize}
+    \item Extraction errors include\dots
+    \begin{itemize}
+        \item background radiation
+        \item optical systems
+        \item photoelectric detectors
+        \item signal processing
+    \end{itemize}
+    \item Subpixel processing is used for star extraction off the focal plane
 \end{itemize}
