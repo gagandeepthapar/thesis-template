@@ -1,0 +1,84 @@
+\chapter{Calibration Techniques and Notes}
+\section{Key Concepts\cite{novel_approach_for_calibration}}
+\begin{itemize}
+    \item Paper strictly talks about camera calibration and not environmental considerations
+    \item Measurement precision is determined by 
+    \begin{itemize}
+        \item Focal length, $f$
+        \item Principal Point offsets, $(x_0, y_0)$
+        \item Focal Plane distortions
+    \end{itemize}
+    \item ... these are usually calibrated out prior launch
+    \item We can model the defocused image by imagining a new focal plane of focal length, $f'$
+    \begin{itemize}
+        \item we can determine the ideal centroid of the star given 
+        \[ u = f' tan\theta \]
+        \[ v = f' tan\phi \]
+        and the direction vector of the star given by 
+        \[ \hat{v} = \begin{bmatrix}
+            \hat{v}_x \\
+            \hat{v}_y \\
+            \hat{v}_z
+        \end{bmatrix} = \frac{1}{u^2 + v^2 + f'^2} \begin{bmatrix}
+            u \\
+            v \\
+            f'
+        \end{bmatrix} \]
+    \end{itemize}
+    \item 4 types of errors described in the paper 
+    \begin{itemize}
+        \item Distortion Model Error
+        \item Principal Point Error
+        \item Measurement Error
+        \item Calibration Data Error
+    \end{itemize}
+\end{itemize}
+
+\section{Distortion Model\cite{novel_approach_for_calibration}}
+\begin{itemize}
+    \item Ideal cameras do not exist; a new camera model was developed considering radial, decentering, and thin prism distortions
+\end{itemize}
+
+\[
+    \begin{bmatrix}
+        \delta_u(u', v') \\
+        \delta_v(u', v')    
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        u' \\
+        v'
+    \end{bmatrix}
+    -
+    \begin{bmatrix}
+        u \\
+        v \\
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        (g_1 + g_3)u'^2 + g_4u'v' + g_1v'^2 + \kappa u'(u'^2 + v'^2) \\
+        g_2u'^2 + g_3u'v' + (g_2 + g_4)v'^2 + \kappa v'(u'^2 + v'^2)
+    \end{bmatrix}
+\]
+where\\
+\begin{center}
+    $(u,v)$ are the ideal, nonobservable image coordinates \\
+    $(u', v')$ are the observable image coordinates with image distortion \\
+    \[ \begin{bmatrix}
+        g_1 \\
+        g_2 \\
+        g_3 \\
+        g_4
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        s_1 + p_1 \\
+        s_2 + p_2 \\
+        2p_1 \\
+        2p_2
+    \end{bmatrix}
+    \]
+    where $s_1, s_2$ represent thin prism distortion \\
+    $p_1, p_2$ represent decentering distortion \\
+    and $\kappa$ represents radial distortion
+\end{center}
