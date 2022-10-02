@@ -54,7 +54,8 @@
 \titleformat*{\paragraph}{\small\bfseries}
 \titleformat*{\subparagraph}{\small\bfseries}
 
-\bibliographystyle{abbrv}
+%\bibliographystyle{abbrv}
+\bibliographystyle{unsrt}
 
 % Make \tindent indent pages if you have no paragraph indent
 \newlength\tindent
@@ -70,6 +71,9 @@
 \newcommand{\captionfonts}{\small\bf\ssp}
 
 \newcommand{\mycaption}[2]{\caption[#1 --- #2]{#1 --- #2}}
+\newcommand\Chapter[2]{
+  \chapter[#1: {\itshape#2}]{#1\\[2ex]\small\itshape#2}
+}
 
 \makeatletter  % Allow the use of @ in command names
 \long\def\@makecaption#1#2{%
