@@ -1,0 +1,27 @@
+\section{The Fundamental Question}
+
+\par \qquad Observing and measuring nature are the basic tools we can use to characterize the world around us.
+We can use increasingly accurate sensors to measure different properties of the universe, however, we must come to terms with a fundamental reality.
+True values of these measurements are non-observable, that is, we can never verify our measurements in nature and are doomed to contain some error in our work.
+We can attribute these errors to our measurement techniques and the idea that we only have discrete tools trying to measure a continuous reality.
+
+\par \qquad In space, a key property to measure is the attitude, or orientation, of our spacecraft.
+The direction we point in is imperative for a variety of reasons such as pointing for power generation, pointing to observe interesting phenomena, and pointing to survive the environment.
+One such sensor to measure our attitude is the star tracker; a clever technology that utilizes the positions of the stars in the universe to ascertain its attitude.
+The star tracker, similar to any other sensor, is ladened with pitfalls in its measurement process and, due to a variety of factors, is prone to error.
+Before we move forward, we must determine why analyzing the error propagation in a star tracker is worth doing; what will benefit from studying how star trackers err.
+
+\par \qquad CubeSats, developed by the Cal Poly CubeSat Lab in 1999 by Prof. Jordi Puig-Suari and Prof. Bob Twiggs, have long been used as a bus for university programs and commercial businesses to fly experiments in Low Earth Orbit, or, LEO.
+CubeSats typically use COTS, or commercial-off-the-shelf, components as they're characterized by their ease and low-cost of development.
+While CubeSats have typically been used for simpler observation missions, the technology has been maturing and, as a consequence, as have their mission requirements.
+Attitude determination and control have been an increasingly popular requirement imposed on CubeSats as a means to accomplish more complex missions i.e., optical-communication demonstrations (SOTA, OSIRISv2)\cite{OpticalCommsInSpace}.
+With the attitude determination requirements becoming increasingly stringent, the sensor selection space converges to only a few select types considering the constraints CubeSat developers are forced to deal with such as lack of payload volume, limited power options, and especially total cost.
+Star trackers are a prime example of a sensor that fits the mission criteria but are overlooked due to their cost.
+Star trackers for CubeSats can start at \$50,000 and only go up from there; a cost usually equal to if not greater than the cost of a typical CubeSat.
+However, with attitude determination requirements becoming stricter, a need for a low-cost solution emerges.
+
+\par \qquad The fundamental question to ask is whether or not a star tracker, traded on performance for cost, is a viable solution for CubeSats in the future.
+This thesis aims to answer the question by analyzing where errors can be allowed to exist based on mission requirements to minimize the total cost for a developer.
+
+\par \qquad The literature offers several suggestions in analyzing the error propagation within the sensor such as hardware considerations, "thermal drift, optical aberration, detector noise"\cite{systematic_error_analysis_of_star_tracker_centroiding}, and systematic algorithmic errors.
+However, before we can analyze where error is prone to occur, we must first understand what a star tracker is and how they work.

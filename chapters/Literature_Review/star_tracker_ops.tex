@@ -1,0 +1,30 @@
+\section{What Is a Star Tracker and How Do They Work?}
+\par \qquad A star tracker is an optical-based sensor that uses the position of stars to determine its attitude; it relies on the notion that relative star movement is low and can be effectively mapped to each other.
+This mapping exists within catalogs formulated over several years from different organizations such as the Yale Bright Star Catalog 5 (BSC5). 
+The catalog contains key information such as Star ID, right ascension and declination in the celestial sphere, brightness magnitude, right ascension and declination motion, and other features.
+
+\par \qquad \emph{Image of example YBSC5 entry}
+
+\par \qquad The catalog can then be modified to include additional information, called features, such as inter-star angles, ratio of triangle legs created by 3 stars, or even pyramidal information; the specific feature generated is determined by the specific identification method employed.
+A quaternion is paired with each of these entries indicating the attitude should this specific feature set be seen.
+
+\par \qquad \emph{Image of modified catalog entry with feature set}
+
+\par \qquad Onboard the star tracker, images are captured of the stars and processed by the star tracker.
+During the centroiding process, the star tracker will read the image and determine where the stars are located within the image plane.
+It will then create the aforementioned features and store it in memory.
+During the identification process, the features in memory are recalled and compared to against the modified catalog where potential matches are found.
+Once a suitable match, typically characterized by high likelihood of similarity in combination with a filter, the attitude is recalled from the entry in the modified catalog.
+It is not uncommon for the star tracker to fail in finding a sufficiently confident match due to the nigh-infinite number of variations a single feature set can have due to image positioning and centroiding errors.
+To combat this, star trackers typically take multiple images per second to try to find better matches.
+This process repeats indefinitely and will generate high-accuracy determinations of attitude.
+
+\par \qquad \emph{Image of generic star tracker process}
+
+\par \qquad The star tracker, in addition to its 2 main process phases, has 2 operating phases.
+If the star tracker has some \emph{a priori} knowledge of its attitude in recent time, i.e., based on previous star tracker readings, then the star tracker only has to search a small portion of the modified catalog in order to find a match as the catalog can be ordered by attitude.
+If, however, the star tracker has no \emph{a priori} knowledge of its attitude, i.e., post-detumble, then the star tracker must search the entire modified catalog.
+Because the modified catalog is so large and can contain a great number of combinations for an even greater number of stars, the process to determine the attitude can take significantly longer.
+This operating phase is typically called the \emph{Lost in Space} problem and is a unique metric in comparing star tracker performance.
+
+\par \qquad \emph{Image of lost in space and normal star tracker process}

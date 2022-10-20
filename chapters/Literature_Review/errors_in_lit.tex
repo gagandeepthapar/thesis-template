@@ -1,0 +1,151 @@
+\section{Sources of Error}
+
+\par \qquad Now that we understand what a star tracker is and how they work, it's imperative to describe the different sources of error we can come across during operation.
+According to Jia et al. (2010), "[t]he most important factors that affect star tracker accuracy include \textbf{thermal drift, optical aberration, detector noise, and systematic error of star image centroid estimation algorithm}"\cite{systematic_error_analysis_of_star_tracker_centroiding}.
+We'll be analyzing these errors, in addition to others, in order to totally understand where star trackers err.
+This thesis aims to identify major concerns and sources of error in star tracker attitude determination such as hardware limitations, sensor noise, thermal distortions, etc. to identify limitations and completely characterize larger order errors and how they propagate to attitude accuracy during star tracker operations.
+
+\subsection{Hardware Limitations}
+\par \qquad The physical hardware of the star tracker will always be the largest source of error. 
+Inaccuracies in the optical axis, focal plane flatness, and lens distortion all contribute to errors in the centroiding process, leading to errors in attitude determination. 
+Camera calibration is a common technique to reduce hardware inconsistencies propagating error through the attitude determination model. 
+Sun et al (2013) proposes a model to handle the uncertainty of where the incident light rays from the navigation stars fall on the focal plane. \cite{optical_system_error_analysis_and_calibration}
+
+\begin{equation} \label{centroid_eq}
+\xi_{A} = \left( \dfrac {\left( \frac {f + \Delta f + \Delta s * tan\left(\theta\right)} {cos\left( \theta + \beta_{ri} \right)} * sin\left(\beta_{ri}\right) + \frac{\Delta s} {cos\left( \theta \right)} + \Delta x + \Delta d \right)} {f} \right) - arctan\left( \frac {\Delta s} {f cos(\theta)} \right) - \beta_{ri}
+\end{equation}
+
+where
+\begin{center}
+    $\xi_{A}$ defines the star tracker measurement accuracy\\
+    $f$ represents the focal length of the star tracker\\
+    $\Delta s$ represents the deviation of the optical axis with respect to the boresight\\
+    $\Delta x$ represents the star point-extraction error\\
+    $\Delta d$ represents radial distortion in the lens\\
+    $\beta_{ri}$ represents the angle between the optical axis and incident light ray\\
+    $\theta$ represents in the inclination of the focal plane
+\end{center}
+
+\par \qquad While Sun et al. (2013) devised this model to generate estimated attitude determination accuracy, it should be noted that only hardware limitations were considered.
+In addition to the inaccuracies of the focal system on the star tracker, additional considerations from Liu et al. (2010) address radial distortion, decentering, and thin prism distortions \cite{novel_approach_for_calibration}
+
+\begin{equation}
+    \begin{bmatrix}
+        \delta_u(u', v') \\
+        \delta_v(u', v')    
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        u' \\
+        v'
+    \end{bmatrix}
+    -
+    \begin{bmatrix}
+        u \\
+        v \\
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        (g_1 + g_3)u'^2 + g_4u'v' + g_1v'^2 + \kappa u'(u'^2 + v'^2) \\
+        g_2u'^2 + g_3u'v' + (g_2 + g_4)v'^2 + \kappa v'(u'^2 + v'^2)
+    \end{bmatrix}
+\end{equation}
+
+where 
+\begin{center}
+    $[g_1, g_2, g_3, g_4]$ each represent a different distortion property.
+\end{center}
+
+\subsection{CCD Noise}
+\par \qquad Sensor noise, specifically from the CCD, is another factor we must analyze when determining how our system and the environment affect attitude determination.
+CCD Noise often appears as partially illuminated pixels in the absence of a real incident light and is caused by the noise in the Analog to Digital Converter during the image capture process.
+G.E. Healey et al. (1994) proposes a model that relates the irradiance, dark current, and quantization to the expected noise level in a given pixel\cite{radiometric_ccd_camera_calibration}.
+
+\begin{equation}
+    D(a,b) = \mu(a,b) + N(a,b)
+\end{equation}
+\begin{equation} \label{noise_src_eq}
+    N(a,b) = N_I(a,b) + N_C(a,b)
+\end{equation}
+
+where
+\begin{center}
+    $D$ represents the digital value of a pixel at location $(a,b)$ on the focal plane\\
+    $\mu(a,b)$ represents the expected digital value based on standard camera principles\\
+    $N(a,b)$ represents the noise of a given pixel\\
+    $N_I(a,b)$ represents the noise part that varies with the image\\
+    $N_C(a,b)$ represents the noise part that is invariant of the electrons captured
+\end{center}
+
+CCD Noise is composed of several different sources, as hinted at in equation \ref{noise_src_eq} such as unintentional light scattering from other bodies, analog-digital converter noise, and Dark Current.
+Dark Current is a form of CCD Noise that is a result of residual electric current in the pixel buckets while there is no incident light being projected on the focal plane.
+Dark Current can worsen with age of the sensor, among other factors.
+
+\par \qquad G.E. Healey et al. (1994) proposes a model to account to account for different noises in CCD sensors.
+
+\begin{equation} \label{noise_correction_eq}
+    D_C(a,b) = \left( I(a,b) + \frac{N_S(a,b)}{\hat{K}(a,b)} + \frac{N_R(a,b)}{\hat{K}(a,b)} \right)A + \frac{N_Q(a,b)}{\hat{K}(a,b)}
+\end{equation}
+where
+
+\begin{center}
+    $D_C$ represents the corrected digital value of a pixel at location $(a,b)$ \\
+    $I$ represents the irradiance on a given pixel \\
+    $N_S$ represents shot noise, a type of noise that deals with the uncertainty of the number of electrons captured\\ 
+    $N_R$ represents zero-mean amplifier noise \\
+    $N_Q$ represents noise from the quantization process \\
+    $\hat{K}$ represents the estimate of number of captured photoelectrons
+\end{center}
+ 
+\par \qquad CCD Noise varies between cameras and can come in the form of several kinds of noises.
+To reduce noise (and improve centroiding), it's important that the noise be calculated to set a \emph{Noise Floor}, or a filter that attempts to remove as much noise from the image without removing stars.
+A typical Noise Floor can be calculated using the average and standard deviation of the brightness of the pixels in the image \cite{accuracy_performance_of_star_trackers}:
+
+\begin{equation}
+    NF = \bar{B} + 5*\sigma_{B}
+\end{equation}
+where
+\begin{center}
+    $\bar{B}$ represents the average brightness value \\
+    $\sigma_{B}$ represents the standard deviation in brightness
+\end{center}
+
+\par \qquad The Noise Floor is a parameter that is typically calculated during operation and will change between image captures. This ensures the Noise Floor is not over-filtering clean photos or under-filtering noisy photos.
+
+\subsection{Thermal Effects}
+\par \qquad One of the larger effects from the environment is the rapidly changing thermal environment.
+In Low-Earth Orbit, or, LEO, spacecraft can experience a temperature swing between -65C and +125C\cite{NASA_LEO_Env} which can cause thermal stresses on all hardware.
+For star trackers in particular, the lens is of interest when analyzing thermal cycles.
+For one, the lens can change shape, lengthening or shortening the focal length in times of extreme heat or cold respectively. 
+Jamieson et al. (1981) thoroughly describes the relation between optical systems and thermal effects, especially noting how the focal length changes with temperature \cite{thermal_effects_in_optical_systems}
+
+\begin{equation} \label{temp_and_focal_length_eq}
+    x_f = \frac{1}{f} \frac{df}{dt} = x_g - \frac{1}{n - n_{air}} \left( \frac{dn}{dt} - n \frac{dn_{air}}{dt} \right)
+\end{equation}
+
+\begin{equation} \label{n_at_temp}
+    n_t - 1 = (n_{15} - 1)\left(\frac{1.0549}{1 + 0.00366t}\right)
+\end{equation}
+
+\begin{equation} \label{n_at_15}
+    (n_{15} - 1) * 10^8 = 8342.1 + \frac{2406030}{130 - \nu^2} + \frac{15996}{38.9-\nu^2}
+\end{equation}
+
+\begin{equation}
+    n_{abs} = n_{rel}n_{air}
+\end{equation}
+
+\begin{equation}
+    x_g = \frac{1}{R_1} \frac{dR_1}{dt} = \frac{1}{R_2} \frac{dR_2}{dt}
+\end{equation}
+
+where 
+\begin{center}
+    $f$ is the focal length \\
+    $x_g$ is the change of surface radii of the lens with respect to temperature \\
+    $n$ is the refractive index at a given temperature \\
+    $n_{air}$ is the refractive index of air $\equiv$ 1.0
+\end{center}
+
+\par \qquad Thermal expansion will directly affect the hardware and, in turn, will influence centroiding processes.
+Understanding how best to approach minimal thermal deformation in the lens can help lead to greater consistency if not accuracy with star tracker measurements.
