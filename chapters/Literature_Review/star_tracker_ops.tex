@@ -3,12 +3,52 @@
 This mapping exists within catalogs formulated over several years from different organizations such as the Yale Bright Star Catalog 5 (BSC5). 
 The catalog contains key information such as Star ID, right ascension and declination in the celestial sphere, brightness magnitude, right ascension and declination motion, and other features.
 
-\par \qquad \emph{Image of example YBSC5 entry}
+\begin{figure}
+    \begin{adjustbox}{center}
+\begin{tabular}{|| c c c c c c c c c ||}
+    \hline
+    \thead{Catalog\\Number} & \thead{B1950 Right\\Ascension} & \thead{B1950\\Declination} & \thead{Spectral\\Type} & \thead{V Magn.\\ x100} & \thead{R.A. Proper\\Motion} & \thead{Dec.Proper\\Motion} & \thead{Radial\\Velocity} & \thead{Object\\Name} \\ [0.5ex] 
+    \hline\hline
+
+    & & & & \dots & & & & \\ 
+    \hline
+    1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+    \hline
+    1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+    \hline
+    & & & & \dots & & & & \\ 
+    \hline
+
+
+\end{tabular}
+\end{adjustbox}
+\caption{Sample star catalog entry from Yale Bright Star Catalog}
+\end{figure}
 
 \par \qquad The catalog can then be modified to include additional information, called features, such as inter-star angles, ratio of triangle legs created by 3 stars, or even pyramidal information; the specific feature generated is determined by the specific identification method employed.
 A quaternion is paired with each of these entries indicating the attitude should this specific feature set be seen.
 
-\par \qquad \emph{Image of modified catalog entry with feature set}
+\begin{figure}
+    \begin{adjustbox}{center}
+\begin{tabular}{|| c c c ||}
+    \hline
+    Star ID A & Star ID B & Interstar Angle \\
+    \hline\hline
+
+    & \dots & \\ 
+    \hline
+    1 & 2 & 3 \\
+    \hline
+    1 & 2 & 3 \\
+    \hline
+    & \dots & \\ 
+    \hline
+
+
+\end{tabular}
+\end{adjustbox}
+\caption{Sample modified star catalog using interstar angle identification}
+\end{figure}
 
 \par \qquad Onboard the star tracker, images are captured of the stars and processed by the star tracker.
 During the centroiding process, the star tracker will read the image and determine where the stars are located within the image plane.

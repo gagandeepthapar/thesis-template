@@ -24,6 +24,8 @@
 \usepackage[breaklinks=true,hidelinks,pdfusetitle]{hyperref}
 \usepackage{cleveref}
 \usepackage{ifthen}
+\usepackage{adjustbox}
+\usepackage{textcomp}
 
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
@@ -123,21 +125,21 @@
 \copyrightpage
 
 % Custom made for Cal Poly (by Andrew Tsui).
-%\committeemembershippage
+\committeemembershippage
 
-%\begin{abstract}
-%\input{abstract}
-%\end{abstract}
+\begin{abstract}
+\input{abstract}
+\end{abstract}
 
-%\begin{acknowledgements}
-%\input{acknowledgements}
-%\end{acknowledgements}
+% \begin{acknowledgements}
+% \input{acknowledgements}
+% \end{acknowledgements}
 
 \tableofcontents
 
-%\listoftables
+% \listoftables
 
-%\listoffigures
+\listoffigures
 
 % Add CHAPTER into table of contents.
 \addtocontents{toc}{%

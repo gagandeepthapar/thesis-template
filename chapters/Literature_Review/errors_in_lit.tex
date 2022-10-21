@@ -12,7 +12,7 @@ Camera calibration is a common technique to reduce hardware inconsistencies prop
 Sun et al (2013) proposes a model to handle the uncertainty of where the incident light rays from the navigation stars fall on the focal plane. \cite{optical_system_error_analysis_and_calibration}
 
 \begin{equation} \label{centroid_eq}
-\xi_{A} = \left( \dfrac {\left( \frac {f + \Delta f + \Delta s * tan\left(\theta\right)} {cos\left( \theta + \beta_{ri} \right)} * sin\left(\beta_{ri}\right) + \frac{\Delta s} {cos\left( \theta \right)} + \Delta x + \Delta d \right)} {f} \right) - arctan\left( \frac {\Delta s} {f cos(\theta)} \right) - \beta_{ri}
+\xi_{A} = \left( \dfrac {\left( \frac {f + \Delta f + \Delta s * tan\left(\theta\right)} {cos\left( \theta + \beta_{ri} \right)} * sin\left(\beta_{ri}\right) + \frac{\Delta s} {cos\left( \theta \right)} + \Delta x + \Delta d \right)} {f} \right)- arctan\left( \frac {\Delta s} {f cos(\theta)} \right) - \beta_{ri}
 \end{equation}
 
 where

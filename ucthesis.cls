@@ -340,8 +340,8 @@
         %\vfill\null
         \addvspace{1.4in}
 
-    A Thesis \par
-    presented to \par
+    A Thesis 
+    presented to \par 
     the Faculty of California Polytechnic State University, \par
     \@campus
 
