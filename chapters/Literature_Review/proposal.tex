@@ -1,16 +1,98 @@
 \section{Motivation}
+\begin{itemize}
+    \item CPCL already developing a star tracker to deploy in orbit and open sourcing the software 
+    \item Would be useful for other universities and low-budget developers to be able to determine if star tracker is worth putting money into 
+    \item Allows cubesats to stay competitive in the maturing spacecraft market 
+\end{itemize}
 
 \section{Contribution to the Field}
+\begin{itemize}
+    \item No other tool to determine star tracker accuracy 
+    \item Focused on CubeSats i.e., low-cost, low-size 
+    \item Allows cubesat developers to estimate their accuracy to determine if a low cost star tracker is inline with the pointing direction
+\end{itemize}
 
 \section{Scope and Statement of Work}
+\begin{itemize}
+    \item Determine major effects to consider
+    \begin{itemize}
+        \item Hardware
+        \begin{itemize}
+            \item Normality of boresight
+            \item Focal plane distortions
+        \end{itemize}
+        
+        \item Environment
+        \begin{itemize}
+        \item CCD Noise (ADC Noise, Dark Current)
+        \item Thermal Environment (Distortions, Cycling)
+        \item Body Rates
+        \item More!
+        \end{itemize}
+
+        \item Algorithmic
+        \begin{itemize}
+            \item Centroiding Errors 
+            \item Identification Errors 
+            \item Quest Errors 
+        \end{itemize}
+    \end{itemize}
+    \item Discover or determine mathematical models or relations between effects and star tracker accuracy on each step in star tracker process (image capture, centroiding, etc)
+    \item Create function/black box for inputs to feed through and spit out star tracker accuracy 
+    \item Devise cost function to optimize few characteristics i.e., cost, accuracy, etc.
+    \item Use aforementioned system to devise discrete set of hardware selections and their expected accuracy 
+    \item Use CPCL star tracker hardware + software as case study
+\end{itemize}
 
 \section{Schedule}
+\begin{itemize}
+    \item Through Fall Quarter:
+    \begin{itemize}
+        \item Finish Centroiding Algorithm 
+        \item Analyze Centroiding Performance
+        \item Finalize list of effects to consider
+        \item Find environmental models to use for black box
+        \item Propose
+    \end{itemize}
+    \item Through Winter Quarter:
+    \begin{itemize}
+        \item Find additional models to complete larger order error sources 
+        \item Combine models to create "black box" of inputs that outputs estimated accuracy
+        \item Requires validation
+        \item Analyze identification performance
+        \item Devise and validate cost functions 
+        \item Determine optimal solutions for the cost functions  
+    \end{itemize}
+    \item Through Spring Quarter
+    \begin{itemize}
+        \item Finish analysis of all models
+        \item Write up thesis
+        \item Defend
+    \end{itemize}
+\end{itemize}
 
 \section{Methodology}
+\begin{itemize}
+    \item Find models relating effects to star tracker accuracy 
+    \item Combine models where appropriate (i.e., thermal effect on focal length where $f$ becomes a function instead of a constant)
+    \item Determine how effects affect the star tracker (i.e., during the centroiding process will propagate from there on)
+    \item Determine how accurate each physical process can be at its max as a function of the different effects
+    \item Create black box based on Monte Carlo analysis looking at discrete sets of camera characteristics and continuous sets of physical properties to estimate star tracker accuracy
+    \item Devise cost function based on community needs and use black box to suggest optimal camera and environment opportunities 
+\end{itemize}
 
 \section{Success Criteria}
+\begin{itemize}
+    \item Black box where various inputs (camera properties, environment, etc.) are fed to estimate star tracker accuracy with some confidence level
+    \item Black box is opened up to show models and how it affects each step in attitude determination 
+\end{itemize}
 
 \section{Expected Challenges}
+\begin{itemize}
+    \item Finding models
+    \item Combining models 
+    \item Devising the cost function 
+\end{itemize}
 
 \par \qquad The literature offers several suggestions in analyzing the error propagation within the sensor such as hardware considerations, "thermal drift, optical aberration, detector noise"\cite{systematic_error_analysis_of_star_tracker_centroiding}, and systematic algorithmic errors.
 However, before we can analyze where error is prone to occur, we must first understand what a star tracker is and how they work.
