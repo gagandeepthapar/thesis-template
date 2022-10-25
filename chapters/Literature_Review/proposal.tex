@@ -20,28 +20,43 @@
         \begin{itemize}
             \item Normality of boresight
             \item Focal plane distortions
+            \item Size of focal array
+            \item CCD Noise (ADC Noise, Dark Current)
         \end{itemize}
         
         \item Environment
         \begin{itemize}
-        \item CCD Noise (ADC Noise, Dark Current)
-        \item Thermal Environment (Distortions, Cycling)
-        \item Body Rates
-        \item More!
+            \item Thermal Environment (Distortions, Cycling)
+            \item Body Rates
         \end{itemize}
 
         \item Algorithmic
         \begin{itemize}
             \item Centroiding Errors 
             \item Identification Errors 
-            \item Quest Errors 
+            \item QUEST Errors 
         \end{itemize}
     \end{itemize}
     \item Discover or determine mathematical models or relations between effects and star tracker accuracy on each step in star tracker process (image capture, centroiding, etc)
     \item Create function/black box for inputs to feed through and spit out star tracker accuracy 
-    \item Devise cost function to optimize few characteristics i.e., cost, accuracy, etc.
-    \item Use aforementioned system to devise discrete set of hardware selections and their expected accuracy 
     \item Use CPCL star tracker hardware + software as case study
+    \item Determining variables to randomize for Monte Carlo Analysis 
+    \begin{itemize}
+        \item Absortivity/Emissivity for thermals 
+        \item CCD Noise 
+        \item Focal Plane distortions 
+        \item Boresight Normality
+        \item Radiation
+        \item Centroiding Accuracy (likely discrete set)
+        \item Identification Accuracy (likely discrete set)
+    \end{itemize}
+    \item Determining variables to keep consistent
+    \begin{itemize}
+        \item QUEST performance 
+        \item LEO altitude ~ 90min orbit period 
+        \item CubeSat sizes (1-3U)
+        \item  
+    \end{itemize}
 \end{itemize}
 
 \section{Schedule}
