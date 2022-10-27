@@ -14,21 +14,15 @@ maryland = {32000, 0.1*3600, 0.1*3600*6, 'Adcole Maryland Aerospace'};
 twinkle = {45000, 15, 90, 'arcsec Twinkle'};
 sagitta = {45000, 2, 10, 'arcsec Sagitta'};
 
-sodern = {445000, 5.2, 32.6, 'Sodern HYDRA'};
-jena = {400000, 2.78, 28, 'Jena A-APS'};
-leo = {709000, 3.57, 23.6, 'Leonardo AA-STR'};  
-ball = {1000000, 1.5, 1.5, 'Ball CT2020'};
-micro = {441000, 1, 3, 'Space Micro \microStar-200M'};
+
+berlin = {30000, 30, 200, 'Berlin Space Technologies'};
+
 
 startrackers = [rocketlab;
                 maryland;
                 twinkle;
                 sagitta;
-                sodern;
-                jena;
-                leo;
-                ball;
-                micro];
+                berlin];
 
 % sun sensors
 bison = {9000, 2*3600, 'BiSon64-ET'};

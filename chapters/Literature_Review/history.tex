@@ -1,21 +1,23 @@
-\section{CubeSats and Pointing}
+\section*{CubeSats and Pointing}
 
 \par \qquad Since their inception in 1999, CubeSats have been employed for a variety of mission types. 
-From measuring elements in the Earth's exosphere to testing vibration and dampening experiments in microgravity, to experimenting accelerated deorbit times via dragsail \cite{PolySat}, it's clear to see that CubeSats are not pigeonholed into a single mission archetype.
+From measuring elements in the Earth's exosphere, to testing vibration and dampening experiments in microgravity, to experimenting accelerated deorbit times via dragsail \cite{PolySat}, it's clear to see that CubeSats are not pigeonholed into a single mission archetype.
 However, as the technology has matured and missions become more complex, their requirements, especially for pointing, have become stricter.
 
 \par \qquad CubeSats, being developed at a university, continue to be designed at universities such as California Polytechnic State University - San Luis Obispo (Cal Poly SLO) or University of California - Davis (UC Davis).
 The initial design made it possible for organizations with limited resources and funding to still be able to develop functional spacecraft with unique mission objectives. 
 While CubeSats have emerged into the greater market and can be developed with upwards of \$1 Million, typical budget-constrained or university CubeSat programs can be expected to spend on the order of \$50,000 - \$200,000 \cite{SmallSatMarket}.
-While a large sum of funds, it should be noticed that a CubeSat is a complicated amalgamation of instruments, supporting avionics, structure, and software, all of which is still expected to undergo and survive testing such as Vibration and Thermal Vacuum tests to comply with launch vehicle standards, each costing a significant amount.
+While a large sum of funds, it should be noticed that a CubeSat is a complicated amalgamation of instruments, supporting avionics, structure, and software, all of which is still expected to undergo and survive testing such as vibration and thermal vacuum tests to comply with launch vehicle standards.
+Each of these subsystems and requirements requires some amount of the total funding.
 As a consequence, funds allocated towards supporting sensors, such as attitude determination sensors, are typically a small portion of the total funding. 
 Despite the limited funding available for such CubeSat programs, technology demands and mission requirements have increased in complexity, creating a need for more affordable component alternatives.
 Pointing requirements, in specific, have become increasingly strict.
-As CubeSats continue to demonstrate their capabilities for missions, earth-sensing missions and inter-satellite communications have slowly been outsourced from traditional, larger spacecraft to the modern CubeSat.
+As CubeSats continue to demonstrate their capabilities for missions, earth-sensing missions and inter-satellite communication systems have slowly been outsourced from traditional, larger spacecraft to the modern CubeSat.
 As a result, pointing has become increasingly important to consider and control.
 
-\par \qquad QuakeSat was a mission which, through the use of magnetometers, would measure and record earthquakes on the surface \cite{QuakeSat}.
-The team from Space Systems Development Laboratory (SSDL) reported, for mission success, they used a wide-angle light sensor; they "were not ideal for attitude determination"\cite{QuakeSat}.
+\subsection*{QuakeSat and CLICK}
+\par \qquad QuakeSat was a mission which would measure and record earthquakes on the surface \cite{QuakeSat}.
+The team from Space Systems Development Laboratory (SSDL) reported, for mission success, they used a wide-angle light sensor and magnetometer; they "were not ideal for attitude determination"\cite{QuakeSat}.
 Stories like QuakeSat characterize the the early missions of CubeSats - where attitude was not a major concern and, as a consequence, became afterthoughts in the design cycle.
 With more modern missions, however, attitude has become the forcing function for mission success.
 The CubeSat Laser Infrared CrosslinK (CLICK) was a technology demonstration for an inter-satellite laser-based communication system from MIT\cite{CubeSatCLICK}.
@@ -28,12 +30,23 @@ Without a suitable sensor, CubeSat capabilities can stagnate indefinitely.
 \par \qquad With other sensors, such as sun sensors and magnetometers, accuracy begins to fall.
 Sun sensors can be as accurate as 0.1 deg \cite{SunSensorA}, or 360 arcsec, and cost as much as \$9,000 \cite{CubeSatShop_SunSensor}. 
 While sun sensors were once the standard for attitude determination on budget-constrained CubeSats, it's clear that they can no longer fulfill the requirements being imposed on modern day CubeSat mission.
-On the opposite end of the spectrum, however, star trackers can be as accurate as 5 arcsec but as expensive as \$120,000 \cite{RocketLabStarTracker}.
+On the opposite end of the spectrum, however, star trackers can be as accurate as 5 arcsec but as expensive as \$120,000 \cite{RocketLabStarTracker} or more.
 CubeSats - particularly developed in university settings or those that are budget constrained - are typically underfunded to afford such star trackers. 
 It's clear to see that the gap between star trackers and other attitude determination sensors needs to be closed. 
 This gap can be filled by trading on star tracker performance for cost, allowing for more affordable alternative options while still outperforming less expensive sensors.
 Parameterizing the error in star trackers based on selected hardware and expected environmental conditions are one such method to determine how to perform the performance trade.
 
-\section{Parameterization of Error}
+\begin{center}
+    \emph{Figure plotting star tracker and other attitude sensor cost vs performance}
+\end{center}
 
-\par \qquad test
+\section*{Parameterization of Error}
+
+\par \qquad While other approaches in determining how to develop more affordable star trackers are viable, analyzing the error propagation allows us to determine additional information about the system and develop a tool for CubeSat developers.
+By looking at each physical step of the star tracker from end-to-end, a complete mathematical model of the star tracker can be deduced, including, but not limited to, where errors occur for one reason or another.
+For example, by identifying flaws in the camera construction such as the normality of the boresight vector or the tilt of the focal array, immediate errors can be characterized and modeled as the ideal model for centroiding would be based on a skewed representation of the celestial sphere.
+By incorporating different effects, specifically the camera hardware and noise, the algorithmic errors, and the leading errors in low earth orbit (LEO), a model can be devised where a given set of inputs (i.e., from a list of mission requirements) can be used to devise how accurate a theoretical star tracker would be.
+This black box would enable CubeSat developers to determine if investing in a low-cost star tracker will be sufficient for the mission without needing to experimentally test for it using their expected mission parameters.
+
+\par \qquad Investigating the error propagation also enables us to determine where the most errors are prone to occur and where it is worth the time and resources to optimize a process. 
+By fully understanding and parameterizing the star tracker process, a greater understanding of how to model the star tracker accuracy in on-orbit conditions can be determined and used to drive decision making for attitude determination sensor selection without \emph{a priori} experimental information.

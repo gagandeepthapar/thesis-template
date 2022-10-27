@@ -1,11 +1,11 @@
-\section{Sources of Error}
+\section*{Sources of Error}
 
 \par \qquad Now that we understand what a star tracker is and how they work, it's imperative to describe the different sources of error we can come across during operation.
 According to Jia et al. (2010), "[t]he most important factors that affect star tracker accuracy include \textbf{thermal drift, optical aberration, detector noise, and systematic error of star image centroid estimation algorithm}"\cite{systematic_error_analysis_of_star_tracker_centroiding}.
 We'll be analyzing these errors, in addition to others, in order to totally understand where star trackers err.
 This thesis aims to identify major concerns and sources of error in star tracker attitude determination such as hardware limitations, sensor noise, thermal distortions, etc. to identify limitations and completely characterize larger order errors and how they propagate to attitude accuracy during star tracker operations.
 
-\subsection{Hardware Limitations}
+\subsection*{Hardware Limitations}
 \par \qquad The physical hardware of the star tracker will always be the largest source of error. 
 Inaccuracies in the optical axis, focal plane flatness, and lens distortion all contribute to errors in the centroiding process, leading to errors in attitude determination. 
 Camera calibration is a common technique to reduce hardware inconsistencies propagating error through the attitude determination model. 
@@ -56,7 +56,7 @@ where
     $[g_1, g_2, g_3, g_4]$ each represent a different distortion property.
 \end{center}
 
-\subsection{CCD Noise}
+\subsection*{CCD Noise}
 \par \qquad Sensor noise, specifically from the CCD, is another factor we must analyze when determining how our system and the environment affect attitude determination.
 CCD Noise often appears as partially illuminated pixels in the absence of a real incident light and is caused by the noise in the Analog to Digital Converter during the image capture process.
 G.E. Healey et al. (1994) proposes a model that relates the irradiance, dark current, and quantization to the expected noise level in a given pixel\cite{radiometric_ccd_camera_calibration}.
@@ -112,7 +112,7 @@ where
 
 \par \qquad The Noise Floor is a parameter that is typically calculated during operation and will change between image captures. This ensures the Noise Floor is not over-filtering clean photos or under-filtering noisy photos.
 
-\subsection{Thermal Effects}
+\subsection*{Thermal Effects}
 \par \qquad One of the larger effects from the environment is the rapidly changing thermal environment.
 In Low-Earth Orbit, or, LEO, spacecraft can experience a temperature swing between -65C and +125C\cite{NASA_LEO_Env} which can cause thermal stresses on all hardware.
 For star trackers in particular, the lens is of interest when analyzing thermal cycles.
