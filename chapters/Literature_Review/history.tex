@@ -1,4 +1,6 @@
-\section*{CubeSats and Pointing}
+\section{Background Knowledge and Context}
+
+\subsection*{CubeSats and Pointing}
 
 \par \qquad Since their inception in 1999, CubeSats have been employed for a variety of mission types. 
 From measuring elements in the Earth's exosphere, to testing vibration and dampening experiments in microgravity, to experimenting accelerated deorbit times via dragsail \cite{PolySat}, it's clear to see that CubeSats are not pigeonholed into a single mission archetype.
@@ -27,12 +29,13 @@ The trend of CubeSats taking on complex technology demonstration and requiring s
 A worrying observation, however, is that the list of sensors able to meet requirements is starting to narrow down. 
 Without a suitable sensor, CubeSat capabilities can stagnate indefinitely.
 
-\par \qquad With other sensors, such as sun sensors and magnetometers, accuracy begins to fall.
+\par \qquad With other sensors, sun sensors, for example, accuracy begins to fall.
 Sun sensors can be as accurate as 0.1 deg \cite{SunSensorA}, or 360 arcsec, and cost as much as \$9,000 \cite{CubeSatShop_SunSensor}. 
 While sun sensors were once the standard for attitude determination on budget-constrained CubeSats, it's clear that they can no longer fulfill the requirements being imposed on modern day CubeSat mission.
 On the opposite end of the spectrum, however, star trackers can be as accurate as 5 arcsec but as expensive as \$120,000 \cite{RocketLabStarTracker} or more.
-CubeSats - particularly developed in university settings or those that are budget constrained - are typically underfunded to afford such star trackers. 
-It's clear to see that the gap between star trackers and other attitude determination sensors needs to be closed. 
+CubeSats - particularly developed in university settings or those that are budget constrained - are typically underfunded to afford such star trackers.
+Other attitude determination alternatives include magnetometers (whose accuracy can vary depending on the orbit type and can be as accurate as 0.01 degrees \cite{Magnetometer}), horizon sensors (which can be accurate to approximately 0.1 degrees \cite{HorizonSensor}), or passive systems such as gravity-gradient which are only accurate to approximately 15 degrees \cite{GravityGradient} depending on the construction and mass properties of the spacecraft.
+While alternatives may be cheaper, it's clear to see that the performance gap compared to star trackers is great and needs to be closed. 
 This gap can be filled by trading on star tracker performance for cost, allowing for more affordable alternative options while still outperforming less expensive sensors.
 Parameterizing the error in star trackers based on selected hardware and expected environmental conditions are one such method to determine how to perform the performance trade.
 
@@ -40,13 +43,23 @@ Parameterizing the error in star trackers based on selected hardware and expecte
     \emph{Figure plotting star tracker and other attitude sensor cost vs performance}
 \end{center}
 
-\section*{Parameterization of Error}
+\subsection*{Parameterization of Error}
 
 \par \qquad While other approaches in determining how to develop more affordable star trackers are viable, analyzing the error propagation allows us to determine additional information about the system and develop a tool for CubeSat developers.
 By looking at each physical step of the star tracker from end-to-end, a complete mathematical model of the star tracker can be deduced, including, but not limited to, where errors occur for one reason or another.
 For example, by identifying flaws in the camera construction such as the normality of the boresight vector or the tilt of the focal array, immediate errors can be characterized and modeled as the ideal model for centroiding would be based on a skewed representation of the celestial sphere.
-By incorporating different effects, specifically the camera hardware and noise, the algorithmic errors, and the leading errors in low earth orbit (LEO), a model can be devised where a given set of inputs (i.e., from a list of mission requirements) can be used to devise how accurate a theoretical star tracker would be.
+By incorporating different effects, specifically the camera hardware and noise, the algorithmic errors, and the leading environmental errors in low earth orbit (LEO), a model can be devised where a given set of inputs (i.e., from a list of mission requirements) can be used to devise how accurate a theoretical star tracker would be.
 This black box would enable CubeSat developers to determine if investing in a low-cost star tracker will be sufficient for the mission without needing to experimentally test for it using their expected mission parameters.
 
 \par \qquad Investigating the error propagation also enables us to determine where the most errors are prone to occur and where it is worth the time and resources to optimize a process. 
 By fully understanding and parameterizing the star tracker process, a greater understanding of how to model the star tracker accuracy in on-orbit conditions can be determined and used to drive decision making for attitude determination sensor selection without \emph{a priori} experimental information.
+
+\par \qquad Alternative methods in reducing the cost of the star tracker include optimizing hardware or writing custom firmware for the optical module.
+While worthwhile efforts, the same pitfalls of high development costs still persist.
+Optimizing the hardware will still require some knowledge of how the optical system works and how different decisions and hardware permutations will affect the estimated accuracy.
+This black box devised through analyzing error propagation allows developers to take the guess work out of the hardware selection and reduces the development cost and time in broad iteration.
+Software optimization is another alternative, however, without a great understanding of the physics, image analysis process, and flight software knowledge, developing personalized algorithms will prove to be burdensome and can still lead to expensive development cycles.
+Analyzing the error propagation through a theoretical lens allows us to specifically determine where errors, or losses, are generated and how hardware selection can help mitigate errors. 
+It also enables us to selectively allow errors to persist by choosing affordable hardware, thereby reducing the total cost of the star tracker.
+
+\par \qquad It should be clear that, due to the rapid maturation of CubeSat technology and capability, a demand for equally capable attitude determination sensors needs to be met, especially one that fits within the confines of a typical CubeSat budget.

@@ -1,12 +1,16 @@
-\section*{Sources of Error}
+\section{Errors in Star Trackers}
 
-\par \qquad Now that we understand what a star tracker is and how they work, it's imperative to describe the different sources of error we can come across during operation.
-According to Jia et al. (2010), "[t]he most important factors that affect star tracker accuracy include \textbf{thermal drift, optical aberration, detector noise, and systematic error of star image centroid estimation algorithm}"\cite{systematic_error_analysis_of_star_tracker_centroiding}.
-We'll be analyzing these errors, in addition to others, in order to totally understand where star trackers err.
-This thesis aims to identify major concerns and sources of error in star tracker attitude determination such as hardware limitations, sensor noise, thermal distortions, etc. to identify limitations and completely characterize larger order errors and how they propagate to attitude accuracy during star tracker operations.
+\par \qquad Now that we understand what a star tracker is and how they work, it's imperative to describe what error propagation is and how it affects the star tracker.
+Error propagation is ``a basic problem analyzing the uncertainty of reliable systems''\cite{ErrorPropagation}; we want to determine why a star tracker is not totally accurate, where errors originate, and how they persist through the star tracker process to affect its final estimated accuracy.
+According to Jia et al. (2010),``[t]he most important factors that affect star tracker accuracy include thermal drift, optical aberration, detector noise, and systematic error of star image centroid estimation algorithm''\cite{systematic_error_analysis_of_star_tracker_centroiding}.
+We can characterize these errors by analyzing the physics behind their presence and how different factors affect their intensity.
+Following the advice of Jia et al. (2010), this thesis aims to analyze errors due to the optical system hardware defects, optical sensor noise, algorithmic assumptions and errors, and the thermal environment of LEO, and how each error tracks through the attitude determination process and its affect on the expected accuracy.
+
+\subsection*{Error Propagation Techniques}
+\par \qquad test
 
 \subsection*{Hardware Limitations}
-\par \qquad The physical hardware of the star tracker will always be the largest source of error. 
+\par \qquad The physical hardware of the star tracker will always be the first source of error and will be compounded upon throughout the process. 
 Inaccuracies in the optical axis, focal plane flatness, and lens distortion all contribute to errors in the centroiding process, leading to errors in attitude determination. 
 Camera calibration is a common technique to reduce hardware inconsistencies propagating error through the attitude determination model. 
 Sun et al (2013) proposes a model to handle the uncertainty of where the incident light rays from the navigation stars fall on the focal plane. \cite{optical_system_error_analysis_and_calibration}
@@ -25,6 +29,8 @@ where
     $\beta_{ri}$ represents the angle between the optical axis and incident light ray\\
     $\theta$ represents in the inclination of the focal plane
 \end{center}
+
+\par \qquad Error due to the optical system hardware can be presented via Monte Carlo Analysis. Sun et al. (2013) 
 
 \par \qquad While Sun et al. (2013) devised this model to generate estimated attitude determination accuracy, it should be noted that only hardware limitations were considered.
 In addition to the inaccuracies of the focal system on the star tracker, additional considerations from Liu et al. (2010) address radial distortion, decentering, and thin prism distortions \cite{novel_approach_for_calibration}

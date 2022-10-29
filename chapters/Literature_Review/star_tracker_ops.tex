@@ -3,7 +3,7 @@
 This mapping exists within catalogs formulated over several years from different organizations such as the Yale Bright Star Catalog 5 (BSC5). 
 The catalog contains key information such as Star ID, right ascension and declination in the celestial sphere, brightness magnitude, right ascension and declination motion, and other features.
 
-\begin{figure}
+\begin{figure}[h]
     \begin{adjustbox}{center}
 \begin{tabular}{|| c c c c c c c c c ||}
     \hline
@@ -12,44 +12,47 @@ The catalog contains key information such as Star ID, right ascension and declin
 
     & & & & \dots & & & & \\ 
     \hline
-    1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+    123 & 0.138637 & 0.951592 & B8 & 4.73 & 2.181662e-07 & -4.848137e-08 & - & - \\
     \hline
-    1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+    124 & 0.138259 & 0.922222 & K2 & 5.60 & -2.569512e-07 & -9.211460e-08 & - & - \\
     \hline
-    1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+    125 & 0.137081 & -0.851784 & A0 & 4.77 & 6.932835e-07 & 8.241832e-08 & - & - \\
     \hline
     & & & & \dots & & & & \\ 
     \hline
-
 
 \end{tabular}
 \end{adjustbox}
 \caption{Sample star catalog entry from Yale Bright Star Catalog}
 \end{figure}
 
-\par \qquad The catalog can then be modified to include additional information, called features, such as inter-star angles, ratio of triangle legs created by 3 stars, or even pyramidal information; the specific feature generated is determined by the specific identification method employed.
-A quaternion is paired with each of these entries indicating the attitude should this specific feature set be seen.
+\par \qquad A copy of the catalog can then be modified to include information, called features, such as inter-star angles, ratio of triangle legs created by 3 stars, or even pyramidal information; the specific feature generated is determined by the specific identification method employed.
+The modified catalog contains the permutations of the stars that comprise the given feature set.
+The identification algorithm can then be used to identify each star in a given image; once each star is identified, a final calculation to determine the star location and the center of the image is processed and mapped to the original catalog.
+Given the position of the star in the image, the star tracker can determine its own position (in right ascension and declination) based on the image center (as this is where the boresight of the star tracker lies).
+The QUEST algorithm can then be used to determine a quaternion representation of the star tracker's attitude from the right ascension and declination.
 
-\begin{figure}
+\begin{figure}[h]
     \begin{adjustbox}{center}
 \begin{tabular}{|| c c c ||}
     \hline
-    Star A ID & Star B ID & Inter-star Angle \\
+    Star A ID & Star B ID & $cos($Inter-star Angle$)$ \\
     \hline\hline
 
     & \dots & \\ 
     \hline
-    1 & 2 & 3 \\
+    123 & 124 & - \\
     \hline
-    1 & 2 & 3 \\
+    123 & 125 & - \\
+    \hline
+    124 & 125 & - \\
     \hline
     & \dots & \\ 
     \hline
 
-
 \end{tabular}
 \end{adjustbox}
-\caption{Sample modified star catalog using interstar angle identification}
+\caption{Sample modified star catalog using inter-star angle identification}
 \end{figure}
 
 \par \qquad Onboard the star tracker, images are captured of the stars and processed by the star tracker.
@@ -61,7 +64,12 @@ It is not uncommon for the star tracker to fail in finding a sufficiently confid
 To combat this, star trackers typically take multiple images per second to try to find better matches.
 This process repeats indefinitely and will generate high-accuracy determinations of attitude.
 
-\par \qquad \emph{Image of generic star tracker process}
+\begin{figure}[h]
+    \begin{adjustbox}{center}
+        \includegraphics[scale=0.45]{star_tracker_process.png}
+    \end{adjustbox}
+    \caption{Working principle of the star tracker system \cite{rolling_shutter_errors}}
+\end{figure}
 
 \par \qquad The star tracker, in addition to its 2 main process phases, has 2 operating phases.
 If the star tracker has some \emph{a priori} knowledge of its attitude in recent time, i.e., based on previous star tracker readings, then the star tracker only has to search a small portion of the modified catalog in order to find a match as the catalog can be ordered by attitude.
@@ -69,4 +77,4 @@ If, however, the star tracker has no \emph{a priori} knowledge of its attitude, 
 Because the modified catalog is so large and can contain a great number of combinations for an even greater number of stars, the process to determine the attitude can take significantly longer.
 This operating phase is typically called the \emph{Lost in Space} problem and is a unique metric in comparing star tracker performance.
 
-\par \qquad \emph{Image of lost in space and normal star tracker process}
+\par \qquad \emph{Flowchart of entire star tracker process including Lost in Space problem}
