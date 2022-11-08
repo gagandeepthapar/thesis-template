@@ -6,14 +6,11 @@ According to Jia et al. (2010),``[t]he most important factors that affect star t
 We can characterize these errors by analyzing the physics behind their presence and how different factors affect their intensity.
 Following the advice of Jia et al. (2010), this thesis aims to analyze errors due to the optical system hardware defects, optical sensor noise, algorithmic assumptions and errors, and the thermal environment of LEO, and how each error tracks through the attitude determination process and its affect on the expected accuracy.
 
-\subsection*{Error Propagation Techniques}
-\par \qquad test
-
 \subsection*{Hardware Limitations}
 \par \qquad The physical hardware of the star tracker will always be the first source of error and will be compounded upon throughout the process. 
 Inaccuracies in the optical axis, focal plane flatness, and lens distortion all contribute to errors in the centroiding process, leading to errors in attitude determination. 
 Camera calibration is a common technique to reduce hardware inconsistencies propagating error through the attitude determination model. 
-Sun et al (2013) proposes a model to handle the uncertainty of where the incident light rays from the navigation stars fall on the focal plane. \cite{optical_system_error_analysis_and_calibration}
+Sun et al. (2013), proposes a model to handle the uncertainty of where the incident light rays from the navigation stars fall on the focal plane. \cite{optical_system_error_analysis_and_calibration}
 
 \begin{equation} \label{centroid_eq}
 \xi_{A} = \left( \dfrac {\left( \frac {f + \Delta f + \Delta s * tan\left(\theta\right)} {cos\left( \theta + \beta_{ri} \right)} * sin\left(\beta_{ri}\right) + \frac{\Delta s} {cos\left( \theta \right)} + \Delta x + \Delta d \right)} {f} \right)- arctan\left( \frac {\Delta s} {f cos(\theta)} \right) - \beta_{ri}
@@ -30,7 +27,24 @@ where
     $\theta$ represents in the inclination of the focal plane
 \end{center}
 
-\par \qquad Error due to the optical system hardware can be presented via Monte Carlo Analysis. Sun et al. (2013) 
+\par \qquad Error due to the optical system hardware can be presented via Monte Carlo Analysis. Sun et al. (2013) imposes a zero-mean error for all properties with varying levels of standard deviation as shown in Table \ref{tab:sun-etal-distribution}
+
+\begin{table}
+    \begin{adjustbox}{center}
+        \begin{tabular}{|| c c c ||}
+            \hline
+            \thead{Parameter} & \thead{Mean Distribution} & \thead{Deviation (Gaussian)} \\
+            \hline\hline
+            Error of Star Point Extraction & 0 & 0.1/3 pixels \\
+            Error of Principal Point & 0 & 4.5/3 pixels \\
+            Error of Focal Length & 0 & 0.6/3 pixels \\
+            Error of Inclination Angle & 0 & 0.075$^{\circ}$/3 \\
+            Distortion & 0 & 0.1/3 pixels \\
+            \hline
+        \end{tabular}
+    \end{adjustbox}
+    \caption{\label{tab:sun-etal-distribution}Distribution of parameters as presented in Sun et al. (2013)\cite{optical_system_error_analysis_and_calibration}}
+\end{table}
 
 \par \qquad While Sun et al. (2013) devised this model to generate estimated attitude determination accuracy, it should be noted that only hardware limitations were considered.
 In addition to the inaccuracies of the focal system on the star tracker, additional considerations from Liu et al. (2010) address radial distortion, decentering, and thin prism distortions \cite{novel_approach_for_calibration}
@@ -62,61 +76,10 @@ where
     $[g_1, g_2, g_3, g_4]$ each represent a different distortion property.
 \end{center}
 
-\subsection*{CCD Noise}
-\par \qquad Sensor noise, specifically from the CCD, is another factor we must analyze when determining how our system and the environment affect attitude determination.
-CCD Noise often appears as partially illuminated pixels in the absence of a real incident light and is caused by the noise in the Analog to Digital Converter during the image capture process.
-G.E. Healey et al. (1994) proposes a model that relates the irradiance, dark current, and quantization to the expected noise level in a given pixel\cite{radiometric_ccd_camera_calibration}.
-
-\begin{equation}
-    D(a,b) = \mu(a,b) + N(a,b)
-\end{equation}
-\begin{equation} \label{noise_src_eq}
-    N(a,b) = N_I(a,b) + N_C(a,b)
-\end{equation}
-
-where
-\begin{center}
-    $D$ represents the digital value of a pixel at location $(a,b)$ on the focal plane\\
-    $\mu(a,b)$ represents the expected digital value based on standard camera principles\\
-    $N(a,b)$ represents the noise of a given pixel\\
-    $N_I(a,b)$ represents the noise part that varies with the image\\
-    $N_C(a,b)$ represents the noise part that is invariant of the electrons captured
-\end{center}
-
-CCD Noise is composed of several different sources, as hinted at in equation \ref{noise_src_eq} such as unintentional light scattering from other bodies, analog-digital converter noise, and Dark Current.
-Dark Current is a form of CCD Noise that is a result of residual electric current in the pixel buckets while there is no incident light being projected on the focal plane.
-Dark Current can worsen with age of the sensor, among other factors.
-
-\par \qquad G.E. Healey et al. (1994) proposes a model to account to account for different noises in CCD sensors.
-
-\begin{equation} \label{noise_correction_eq}
-    D_C(a,b) = \left( I(a,b) + \frac{N_S(a,b)}{\hat{K}(a,b)} + \frac{N_R(a,b)}{\hat{K}(a,b)} \right)A + \frac{N_Q(a,b)}{\hat{K}(a,b)}
-\end{equation}
-where
-
-\begin{center}
-    $D_C$ represents the corrected digital value of a pixel at location $(a,b)$ \\
-    $I$ represents the irradiance on a given pixel \\
-    $N_S$ represents shot noise, a type of noise that deals with the uncertainty of the number of electrons captured\\ 
-    $N_R$ represents zero-mean amplifier noise \\
-    $N_Q$ represents noise from the quantization process \\
-    $\hat{K}$ represents the estimate of number of captured photoelectrons
-\end{center}
- 
-\par \qquad CCD Noise varies between cameras and can come in the form of several kinds of noises.
-To reduce noise (and improve centroiding), it's important that the noise be calculated to set a \emph{Noise Floor}, or a filter that attempts to remove as much noise from the image without removing stars.
-A typical Noise Floor can be calculated using the average and standard deviation of the brightness of the pixels in the image \cite{accuracy_performance_of_star_trackers}:
-
-\begin{equation}
-    NF = \bar{B} + 5*\sigma_{B}
-\end{equation}
-where
-\begin{center}
-    $\bar{B}$ represents the average brightness value \\
-    $\sigma_{B}$ represents the standard deviation in brightness
-\end{center}
-
-\par \qquad The Noise Floor is a parameter that is typically calculated during operation and will change between image captures. This ensures the Noise Floor is not over-filtering clean photos or under-filtering noisy photos.
+\par \qquad Modeling the physical error of the image-capturing process of the star tracker will cause compounding errors down the propagation analysis and should be closely studied.
+Creating an valid accuracy range based solely on the physical process will lighten difficulty and computation for analyzing further errors, i.e., the ones caused by algorithms. 
+A multivariate propagation analysis approach will likely be best to use for modeling the physical properties as many of the affects are co-dependent on each other and can change constantly.
+A major source of fluctuation, for example, is the expansion or compression of the focal length due to the thermal environment in LEO.
 
 \subsection*{Thermal Effects}
 \par \qquad One of the larger effects from the environment is the rapidly changing thermal environment.
@@ -154,4 +117,174 @@ where
 \end{center}
 
 \par \qquad Thermal expansion will directly affect the hardware and, in turn, will influence centroiding processes.
-Understanding how best to approach minimal thermal deformation in the lens can help lead to greater consistency if not accuracy with star tracker measurements.
+Immediately, it's clear to see that focal length is a function of the thermal environment; seeing that the focal length is one of the most important and relevant parameters of the star tracker, it's possible to use this temperature-dependent function in place of where focal length is being called.
+This composite allows us to introduce a new dependent variable in equations that were previously stagnant, i.e., in the hardware limitations posed by Sun et al. (2013) in Equation \ref{centroid_eq}.
+Temperature can be seen as a function of the absortivity and emissivity of the system in orbit where the eclipse times will determine the max temperature the system can reach.
+Depending on the range of temperatures the system will experience, especially so often due to the short orbital period in LEO, the lens of the system may see drastic degradation and changes over time, widening the accuracy range.
+
+\subsection*{CCD Noise}
+\par \qquad Sensor noise, specifically from the CCD, is another factor we must analyze when determining how our system and the environment affect attitude determination.
+CCD Noise often appears as partially illuminated pixels in the absence of a real incident light and is caused by the noise in the Analog to Digital Converter during the image capture process.
+G.E. Healey et al. (1994) proposes a model that relates the irradiance, dark current, and quantization to the expected noise level in a given pixel\cite{radiometric_ccd_camera_calibration}.
+
+\begin{equation}
+    D(a,b) = \mu(a,b) + N(a,b)
+\end{equation}
+\begin{equation} \label{noise_src_eq}
+    N(a,b) = N_I(a,b) + N_C(a,b)
+\end{equation}
+
+where
+\begin{center}
+    $D$ represents the digital value of a pixel at location $(a,b)$ on the focal plane\\
+    $\mu(a,b)$ represents the expected digital value based on standard camera principles\\
+    $N(a,b)$ represents the noise of a given pixel\\
+    $N_I(a,b)$ represents the noise part that varies with the image\\
+    $N_C(a,b)$ represents the noise part that is invariant of the electrons captured
+\end{center}
+
+\par \qquad CCD Noise is composed of several different sources, as alluded to within Equation \ref{noise_src_eq} such as unintentional light scattering from other bodies, analog-digital converter noise, and Dark Current.
+Dark Current is a form of CCD Noise that is a result of residual electric current in the pixel buckets while there is no incident light being projected on the focal plane.
+Dark Current can worsen with age of the sensor, among other factors.
+
+\par \qquad Healey et al. (1994) proposes a model to account to account for different noises in CCD sensors.
+
+\begin{equation} \label{noise_correction_eq}
+    D_C(a,b) = \left( I(a,b) + \frac{N_S(a,b)}{\hat{K}(a,b)} + \frac{N_R(a,b)}{\hat{K}(a,b)} \right)A + \frac{N_Q(a,b)}{\hat{K}(a,b)}
+\end{equation}
+where
+
+\begin{center}
+    $D_C$ represents the corrected digital value of a pixel at location $(a,b)$ \\
+    $I$ represents the irradiance on a given pixel \\
+    $N_S$ represents shot noise, a type of noise that deals with the uncertainty of the number of electrons captured\\ 
+    $N_R$ represents zero-mean amplifier noise \\
+    $N_Q$ represents noise from the quantization process \\
+    $\hat{K}$ represents the estimate of number of captured photoelectrons
+\end{center}
+ 
+\par \qquad CCD Noise varies between cameras and can come in the form of several kinds of noises.
+To reduce noise (and improve centroiding), it's important that the noise be calculated to set a \emph{Noise Floor}, or a filter that attempts to remove as much noise from the image without removing stars.
+A typical Noise Floor can be calculated using the average and standard deviation of the brightness of the pixels in the image \cite{accuracy_performance_of_star_trackers}:
+
+\begin{equation}
+    NF = \bar{B} + 5*\sigma_{B}
+\end{equation}
+where
+\begin{center}
+    $\bar{B}$ represents the average brightness value \\
+    $\sigma_{B}$ represents the standard deviation in brightness
+\end{center}
+
+\par \qquad The Noise Floor is a parameter that is typically calculated during operation and will change between image captures. This ensures the Noise Floor is not over-filtering clean photos or under-filtering noisy photos.
+The noise will be important to consider as it directly affects what the centroiding step considers a star or not which can drive error extremely high. 
+
+\subsection*{Algorithmic Errors}
+
+\par \qquad One of the largest errors occurs during the algorithmic processes.
+Centroiding is a sensitive process that is limited by the pixel density of the focal array.
+Yang et al. (2011) proposes a novel approach of analyzing the frequency domain of the centroiding function to reduce the pixel accuracy from 0.06 to 6 x 10$^{-5}$ pixels \cite{centroiding_errors}. 
+Because the centroiding process relies on analyzing the brightness of each pixel, its quite common for the process to select a random point around inside the star as opposed to the true center.
+Even small errors in this process will propagate through the identification and quaternion generation steps.
+Most centroiding algorithms approach the problem using the \emph{Center-of-Mass} approach where the "center of mass" of the star (using the brightness value of the pixel) is used; i.e., 
+
+\begin{equation*}
+    \hat{x_{c}} = \frac{\iint_{W} xI(x,y)\,dx\,dy}{\iint_{W}I(x,y)\,dx\,dy} \approx \hat{x_{g}} = \frac{\Sigma^{n}_{i=1} x_iI_i}{\Sigma^{n}_{i=1}I_i}
+\end{equation*}
+\begin{equation}
+    \hat{x_{c}} = \frac{\iint_{W} yI(x,y)\,dx\,dy}{\iint_{W}I(x,y)\,dx\,dy} \approx \hat{y_{g}} = \frac{\Sigma^{n}_{i=1} y_iI_i}{\Sigma^{n}_{i=1}I_i} 
+\end{equation}
+
+where $(\hat{x_c}, \hat{y_c})$ is the ideal centroid of the star if the measurement system was continuous and $(\hat{x_g}, \hat{y_g})$ is the expected centroid due to the discretization of the pixels.
+Analyzing how the stars are purposefully blurred in the image also dramatically changes how accurate the centroiding algorithm can be.
+In order to accurately determine the centroid of a star, the optical system is purposefully blurred or defocused which enables the stars to occupy more space than it would otherwise.
+The radius of the blur is typically a Gaussian, or uniform, function whose width can be modulated by the software.
+With greater Gaussian widths, more pixels are occupied by the star which can lead to additional error as seen in Figure 2.4 \cite{centroiding_errors}.
+
+\begin{figure}[h]\label{centroiding_width_errors}
+    \includegraphics[scale=0.5]{centroiding_errors.png} 
+    \caption{Centroinding errors for various Gaussian-blurred stars}
+\end{figure}
+
+Additional considerations are taken into account such as the likelihood of multiple stars being close together and creating larger centroiding-based errors or noise causing the centroiding algorithm to identify a false star.
+These are mainly dealt with on a implementation-by-implementation basis but it can easily be seen how star identification can be askew as a consequence of failing to consider the edge cases.
+Analyzing a discrete set of Gaussian widths in the Monte Carlo Analysis tool can help pair various widths with the hardware as it's unclear if there's necessarily a "best" Gaussian width to choose for all systems.
+
+\subsection*{Error Propagation Techniques}
+\par \qquad While modeling the errors in the star tracker is a significant part in the analysis, determining how the error propagates through the system and its affect on its accuracy is a different and equally important step to understand; how do the aforementioned errors compound together throughout the process.
+A common method in modeling errors is to say that for a measurement, $x$, we can say
+
+\begin{equation}
+    x = \mu_x + e_x
+\end{equation}
+
+where $\mu_x$ represents the mean or expected value of the measurement and $e_x$ is a zero-mean random variable with some standard deviation, $\sigma_x$ \cite{error_prop_in_imaging}.
+In the context of star trackers, this could represent a multitude of measurements such as the brightness of a given pixel given the direct light from the star and the random addition or subtraction of pixel amplitude due to CCD noise or Dark Current.
+Modeling measurements as the sum of some true value and random variance allows for various models to be combined and have some accuracy range attached to it.
+For example, if a pixel's brightness is said to be 1000 $\pm$ 10 nits and a coarse physical filter lowers the brightness by 20.00 $\pm$ 5.00 \%, we can say that the new pixel brightness is $\bar{B} = 900 \pm 12.247$ nits as given by 
+
+\begin{equation}\label{simple_covar}
+    \bar{Q} = ab + \sqrt{\sigma_a^2 + \sigma_b^2}
+\end{equation}
+
+where $Q$ is the estimated measurement value and $\sigma_a$ and $\sigma_b$ are the standard deviations of the measurements.
+
+\par \qquad The model for combining measurement uncertainties in \eqref{simple_covar} is useful in showing how simple models which are independent of one another compound together.
+In the case where different models are more complicated and are co-dependent on each other, a different approach is required.
+As posed in Burns et al. (1997), a Multivariate Linear Transformation technique allows a list of output measurements, $\textbf{y}$, to be represented as a vector of size $n$-by-1 which is said to be the product of the independent measurements, $\textbf{x}$, another $n$-by-1 vector, and the co-variance matrix; i.e., 
+
+\begin{equation}
+    \textbf{y = Ax}
+\end{equation}
+
+where the covariance matrix of $\textbf{y}$, $\Sigma_y$, is proportional to the covariance matrix of $\textbf{x}$, $\Sigma_x$; i.e., 
+
+\begin{equation}
+    \Sigma_y = A\Sigma_xA^T
+\end{equation}
+
+where
+
+\begin{equation}
+    \Sigma_x = 
+    \begin{bmatrix}
+        \sigma_{11} & \sigma_{12} & \dots & \sigma_{1n} \\
+        \sigma_{21} & \sigma_{22} & \dots & \sigma_{2n} \\
+        \vdots & & \ddots & \vdots \\
+        \sigma_{n1} & \sigma_{n2} & \dots &  \sigma_{nm}
+    \end{bmatrix}
+\end{equation}
+
+where $A$ is a matrix of weights relating the input to output measurements and $\sigma_{ij}$, is the covariance between measurement $i$ and $j$ \cite{error_prop_in_imaging}.
+This technique will enable models which contain co-dependent information to be compounded together; i.e,. in the case of modeling the relation between thermal expansion/compression of the lens and its affect on centroiding accuracy.
+
+\subsection*{Error Analysis Alternatives: Monte Carlo Analysis}
+\par \qquad Error propagation via Multivariate Linear Transformation, while powerful and can maintain complex relations between various parameters, requires great understanding of the underlying physics and interdependencies.
+A feasible alternative to reducing required knowledge for error propagation is by employing Monte Carlo Analysis.
+Monte Carlo Analysis is a technique where experimental probabilistic trials are run to determine estimations of a measurement given sets of input parameters and their expected values and variance \cite{MonteCarloAnalysis}.
+This technique allows us to run trials with varying inputs and generate an estimated accuracy without requiring advanced knowledge of the co-dependence of some of the parameters.
+
+
+\subsection*{Contributions to the Field}
+\par \qquad As we can see, it is non-trivial to determine how imperfections in the star tracker affect its accuracy.
+Analyzing error propagation allows us to step through how accuracy changes with each process and determine which errors are forced to exist due to the discretization of the celestial sphere.
+Developing a tool for CubeSat developers to estimate accuracy allows them to determine if and how various hardware options meet their mission requirements, allowing them to sink less costs for sensor development.
+While the main goal of this thesis is to develop a tool to analyze star tracker accuracy given a few parameters, another objective is to inform developers of major considerations.
+By looking at how errors stack up, decisions can be made to determine if it's worth the effort, cost, or time to optimize some process.
+We hope that the content allows star tracker development cycles to accelerate, further reducing cost of the final product.
+
+\subsection*{Conclusion}
+\par \qquad While the literature offers several options to model accuracy of various subprocesses in the star tracker, the main challenge will be combining the information to produce a single system to ingest mission parameters and output estimated accuracy.
+As such, additional review of statistics in stochastic processes and multivariate error analysis will be required to accurately combine information together.
+Monte Carlo Analysis will supplement the multivariate transformation by looking at several unique permutations of inputs to determine an estimated accuracy uncertainty.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.5]{Thesis_Blackbox.png}
+        \caption{Flow of information through the composite model results in an estimated accuracy, $\bar{q}$}
+    \end{figure}
+
+\par \qquad Validation of composite models will be proven mathematically as experimental trials require additional care in maintaining control groups and calibration. 
+Validation can also take the form of comparison between the devised models and advertised star tracker performance given their physical characteristics.
+Parameterizing these errors as functions of similar variables allows for the development of a tool to generate the estimated accuracy, or uncertainty, of a star tracker given a few mission parameters. 
+Herein lies the goal of the thesis; to synthesize the previously studied models and combine them to analyze errors in star trackers and track their presence and intensity through the process.

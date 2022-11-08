@@ -61,5 +61,7 @@ This black box devised through analyzing error propagation allows developers to 
 Software optimization is another alternative, however, without a great understanding of the physics, image analysis process, and flight software knowledge, developing personalized algorithms will prove to be burdensome and can still lead to expensive development cycles.
 Analyzing the error propagation through a theoretical lens allows us to specifically determine where errors, or losses, are generated and how hardware selection can help mitigate errors. 
 It also enables us to selectively allow errors to persist by choosing affordable hardware, thereby reducing the total cost of the star tracker.
+It should be clear by now that, due to the rapid maturation of CubeSat technology and capability, a demand for equally capable attitude determination sensors needs to be met, especially one that fits within the confines of a typical CubeSat budget.
 
-\par \qquad It should be clear that, due to the rapid maturation of CubeSat technology and capability, a demand for equally capable attitude determination sensors needs to be met, especially one that fits within the confines of a typical CubeSat budget.
+\par \qquad The literature offers several suggestions in analyzing the error propagation within the sensor such as hardware considerations, "thermal drift, optical aberration, detector noise"\cite{systematic_error_analysis_of_star_tracker_centroiding}, and systematic algorithmic errors.
+However, before we can analyze where error is prone to occur, we must first understand what a star tracker is and how they work.
